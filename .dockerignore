@@ -1,0 +1,14 @@
+.docker-compose/
+docker-compose.yaml
+.git/
+.gitkeep
+.idea/
+target/
+secrets/
+tmp/
+tools/
+Dockerfile
+*.dockerfile
+*.md
+.env
+.envrc

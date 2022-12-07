@@ -1,0 +1,195 @@
+version: '3'
+services:
+  pd0:
+    image: pingcap/pd:latest
+    ports:
+      - "2379"
+    volumes:
+      - ./docker-compose/tidb/config/pd.toml:/pd.toml:ro
+      - ./.docker-compose/data/pd0:/data
+    command:
+      - --name=pd0
+      - --client-urls=http://0.0.0.0:2379
+      - --peer-urls=http://0.0.0.0:2380
+      - --advertise-client-urls=http://pd0:2379
+      - --advertise-peer-urls=http://pd0:2380
+      - --initial-cluster=pd0=http://pd0:2380,pd1=http://pd1:2380,pd2=http://pd2:2380
+      - --data-dir=/data/pd0
+      - --config=/pd.toml
+      - --log-file=/logs/pd0.log
+    restart: on-failure
+  pd1:
+    image: pingcap/pd:latest
+    ports:
+      - "2379"
+    volumes:
+      - ./docker-compose/tidb/config/pd.toml:/pd.toml:ro
+      - ./.docker-compose/data/pd1:/data
+    command:
+      - --name=pd1
+      - --client-urls=http://0.0.0.0:2379
+      - --peer-urls=http://0.0.0.0:2380
+      - --advertise-client-urls=http://pd1:2379
+      - --advertise-peer-urls=http://pd1:2380
+      - --initial-cluster=pd0=http://pd0:2380,pd1=http://pd1:2380,pd2=http://pd2:2380
+      - --data-dir=/data/pd1
+      - --config=/pd.toml
+      - --log-file=/logs/pd1.log
+    restart: on-failure
+  pd2:
+    image: pingcap/pd:latest
+    ports:
+      - "2379"
+    volumes:
+      - ./docker-compose/tidb/config/pd.toml:/pd.toml:ro
+      - ./.docker-compose/data/pd2:/data
+    command:
+      - --name=pd2
+      - --client-urls=http://0.0.0.0:2379
+      - --peer-urls=http://0.0.0.0:2380
+      - --advertise-client-urls=http://pd2:2379
+      - --advertise-peer-urls=http://pd2:2380
+      - --initial-cluster=pd0=http://pd0:2380,pd1=http://pd1:2380,pd2=http://pd2:2380
+      - --data-dir=/data/pd2
+      - --config=/pd.toml
+      - --log-file=/logs/pd2.log
+    restart: on-failure
+  tikv0:
+    image: pingcap/tikv:latest
+    volumes:
+      - ./docker-compose/tidb/config/tikv.toml:/tikv.toml:ro
+      - ./.docker-compose/data/tikv0:/data
+    command:
+      - --addr=0.0.0.0:20160
+      - --advertise-addr=tikv0:20160
+      - --data-dir=/data/tikv0
+      - --pd=pd0:2379,pd1:2379,pd2:2379
+      - --config=/tikv.toml
+      - --log-file=/logs/tikv0.log
+    depends_on:
+      - "pd0"
+      - "pd1"
+      - "pd2"
+    restart: on-failure
+  tikv1:
+    image: pingcap/tikv:latest
+    volumes:
+      - ./docker-compose/tidb/config/tikv.toml:/tikv.toml:ro
+      - ./.docker-compose/data/tikv1:/data
+    command:
+      - --addr=0.0.0.0:20160
+      - --advertise-addr=tikv1:20160
+      - --data-dir=/data/tikv1
+      - --pd=pd0:2379,pd1:2379,pd2:2379
+      - --config=/tikv.toml
+      - --log-file=/logs/tikv1.log
+    depends_on:
+      - "pd0"
+      - "pd1"
+      - "pd2"
+    restart: on-failure
+  tikv2:
+    image: pingcap/tikv:latest
+    volumes:
+      - ./docker-compose/tidb/config/tikv.toml:/tikv.toml:ro
+      - ./.docker-compose/data/tikv2:/data
+    command:
+      - --addr=0.0.0.0:20160
+      - --advertise-addr=tikv2:20160
+      - --data-dir=/data/tikv2
+      - --pd=pd0:2379,pd1:2379,pd2:2379
+      - --config=/tikv.toml
+      - --log-file=/logs/tikv2.log
+    depends_on:
+      - "pd0"
+      - "pd1"
+      - "pd2"
+    restart: on-failure
+  tidb:
+    container_name: help-desk-tidb
+    image: pingcap/tidb:latest
+    ports:
+      - "4000:4000"
+      - "10080:10080"
+    volumes:
+      - ./docker-compose/tidb/config/tidb.toml:/tidb.toml:ro
+    command:
+      - --store=tikv
+      - --path=pd0:2379,pd1:2379,pd2:2379
+      - --config=/tidb.toml
+      - --log-file=/logs/tidb.log
+      - --advertise-address=tidb
+    depends_on:
+      - "tikv0"
+      - "tikv1"
+      - "tikv2"
+    restart: on-failure
+  tispark-master:
+    image: pingcap/tispark:v2.1.1
+    command:
+      - /opt/spark/sbin/start-master.sh
+    volumes:
+      - ./docker-compose/tidb/config/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+    environment:
+      SPARK_MASTER_PORT: 7077
+      SPARK_MASTER_WEBUI_PORT: 8080
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    depends_on:
+      - "tikv0"
+      - "tikv1"
+      - "tikv2"
+    restart: on-failure
+  tispark-slave0:
+    image: pingcap/tispark:v2.1.1
+    command:
+      - /opt/spark/sbin/start-slave.sh
+      - spark://tispark-master:7077
+    volumes:
+      - ./docker-compose/tidb/config/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+    environment:
+      SPARK_WORKER_WEBUI_PORT: 38081
+    ports:
+      - "38081:38081"
+    depends_on:
+      - tispark-master
+    restart: on-failure
+  dragonfly:
+    container_name: help-desk-dragonfly
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    ulimits:
+      memlock: -1
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./.docker-compose/data/dragonfly:/data
+  meilisearch:
+    container_name: help-desk-meilisearch
+    image: getmeili/meilisearch:v0.30
+    command:
+      - meilisearch
+      - --env=development
+    environment:
+      MEILI_MASTER_KEY: "MASTER_KEY"
+      SPARK_MASTER_WEBUI_PORT: 8080
+    ports:
+      - "7700:7700"
+    volumes:
+      - ./.docker-compose/data/meilisearch:/meili_data
+  nats:
+    container_name: help-desk-nats
+    image: nats:2.9-alpine
+    command:
+      [
+        "--port", "4222",
+        "--http_port", "8222",
+        "--jetstream",
+        "--store_dir", "/data",
+        "--debug"
+      ]
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      - ./.docker-compose/data/nats:/data
