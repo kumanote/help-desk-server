@@ -13,6 +13,8 @@ pub enum Error {
     /// format check must be done by client side, thus the server dose not hold error details.
     #[error("InvalidFormat")]
     InvalidFormat,
+    #[error("InvalidRequest")]
+    InvalidRequest,
     #[error("UnsupportedRteValue: {value}")]
     UnsupportedRteValue { value: String },
     #[error("SystemError: {cause}")]

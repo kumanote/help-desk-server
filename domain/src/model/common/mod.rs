@@ -16,5 +16,8 @@ pub use mime_type::*;
 mod scope;
 pub use scope::*;
 
+mod scope_for_group;
+pub use scope_for_group::*;
+
 mod slug;
 pub use slug::*;

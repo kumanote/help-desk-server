@@ -1,1 +1,3 @@
-pub mod init_workspace;
+mod init_workspace;
+
+pub use init_workspace::*;

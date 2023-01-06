@@ -82,9 +82,11 @@ macro_rules! def_id {
     };
 }
 
+def_id!(WorkspaceId);
 def_id!(AgentId);
 def_id!(GroupId);
 def_id!(RoleId);
+def_id!(RoleForGroupId);
 def_id!(FileId);
 def_id!(FaqCategoryId);
 def_id!(FaqItemId);

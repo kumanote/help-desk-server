@@ -1,0 +1,17 @@
+[package]
+name = "infrastructure"
+version = "0.1.0"
+authors = ["Hiroki Tanaka <support@kumano-te.com>"]
+license = "MIT"
+repository = "https://github.com/kumanote/help-desk-server"
+edition = "2021"
+
+[dependencies]
+domain = { path = "../domain" }
+cache = { path = "../data/cache" }
+database = { path = "../data/database" }
+queue = { path = "../data/queue" }
+
+[dev-dependencies]
+dotenv = "0.15.0"
+serial_test = "0.10.0"

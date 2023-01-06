@@ -1,6 +1,7 @@
 [workspace]
 
 members = [
+    "infrastructure",
     "domain",
     "data/cache",
     "data/database",

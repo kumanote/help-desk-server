@@ -1,1 +1,10 @@
+DROP TABLE IF EXISTS `group_roles`;
+DROP TABLE IF EXISTS `group_members`;
+DROP TABLE IF EXISTS `groups`;
+DROP TABLE IF EXISTS `agent_roles`;
+DROP TABLE IF EXISTS `agents`;
+DROP TABLE IF EXISTS `roles_for_group`;
+DROP TABLE IF EXISTS `role_scopes`;
+DROP TABLE IF EXISTS `roles`;
 DROP TABLE IF EXISTS `files`;
+DROP TABLE IF EXISTS `workspaces`;

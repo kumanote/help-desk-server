@@ -58,6 +58,8 @@ macro_rules! def_name {
     };
 }
 
+def_name!(WorkspaceName, 3, 50);
 def_name!(AgentName, 3, 50);
 def_name!(GroupName, 3, 50);
 def_name!(RoleName, 3, 50);
+def_name!(RoleForGroupName, 3, 50);

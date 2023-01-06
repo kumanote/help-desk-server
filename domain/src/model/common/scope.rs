@@ -16,9 +16,6 @@ const WRITE_INQUIRY: &'static str = "write:inquiry";
 const ADMIN_INQUIRY: &'static str = "admin:inquiry";
 const READ_WORKSPACE: &'static str = "read:workspace";
 const ADMIN_WORKSPACE: &'static str = "admin:workspace";
-const GROUP_MEMBER: &'static str = "group_member";
-const GROUP_ADMIN: &'static str = "group_admin";
-const GROUP_OWNER: &'static str = "group_owner";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Scope {
@@ -34,9 +31,6 @@ pub enum Scope {
     AdminInquiry,
     ReadWorkspace,
     AdminWorkspace,
-    GroupMember,
-    GroupAdmin,
-    GroupOwner,
 }
 
 impl Scope {
@@ -60,9 +54,6 @@ impl AsRef<str> for Scope {
             Self::AdminInquiry => ADMIN_INQUIRY,
             Self::ReadWorkspace => READ_WORKSPACE,
             Self::AdminWorkspace => ADMIN_WORKSPACE,
-            Self::GroupMember => GROUP_MEMBER,
-            Self::GroupAdmin => GROUP_ADMIN,
-            Self::GroupOwner => GROUP_OWNER,
         }
     }
 }
@@ -103,9 +94,6 @@ impl FromStr for Scope {
             ADMIN_INQUIRY => Ok(Self::AdminInquiry),
             READ_WORKSPACE => Ok(Self::ReadWorkspace),
             ADMIN_WORKSPACE => Ok(Self::AdminWorkspace),
-            GROUP_MEMBER => Ok(Self::GroupMember),
-            GROUP_ADMIN => Ok(Self::GroupAdmin),
-            GROUP_OWNER => Ok(Self::GroupOwner),
             _ => Err(Error::UnsupportedScope {
                 value: s.to_owned(),
             }),

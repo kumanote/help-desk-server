@@ -1016,6 +1016,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "infrastructure"
+version = "0.1.0"
+dependencies = [
+ "cache",
+ "database",
+ "domain",
+ "dotenv",
+ "queue",
+ "serial_test",
+]
+
+[[package]]
 name = "instant"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
