@@ -1,4 +1,4 @@
-use crate::model::{AgentId, AgentRoles, GroupId, GroupRoles, Role, RoleId};
+use crate::model::{AgentId, AgentRoles, GroupId, GroupRoles, Role, RoleId, Scope};
 
 pub trait RoleRepository: Send + Sync + 'static {
     type Err;
@@ -26,4 +26,10 @@ pub trait RoleRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         group_roles: &GroupRoles,
     ) -> Result<(), Self::Err>;
+    fn check_agent_has_required_scopes(
+        &self,
+        tx: &mut Self::Transaction,
+        agent_id: &AgentId,
+        scopes: &Vec<Scope>,
+    ) -> Result<bool, Self::Err>;
 }

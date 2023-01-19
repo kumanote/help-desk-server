@@ -7,6 +7,8 @@ repository = "https://github.com/kumanote/help-desk-server"
 edition = "2021"
 
 [dependencies]
+chrono = "0.4.23"
+
 domain = { path = "../domain" }
 cache = { path = "../data/cache" }
 database = { path = "../data/database" }

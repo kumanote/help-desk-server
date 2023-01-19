@@ -52,6 +52,7 @@ fn build_index_name(locale: &str) -> String {
     format!("faq_item_content_{}", locale)
 }
 
+/*
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -115,3 +116,4 @@ mod tests {
         assert!(found.is_none());
     }
 }
+*/

@@ -58,3 +58,11 @@ impl From<database::Error> for Error {
         }
     }
 }
+
+impl From<cache::R2D2Error> for Error {
+    fn from(cause: cache::R2D2Error) -> Self {
+        Self::SystemError {
+            cause: anyhow!(cause),
+        }
+    }
+}

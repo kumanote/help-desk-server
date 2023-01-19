@@ -4,6 +4,7 @@ mod health_check;
 pub use health_check::*;
 
 pub mod agent_access_token;
+pub mod auth_agent_scopes;
 pub mod login_blocked_by_ip;
 pub mod login_blocked_by_username;
 pub mod login_failed_by_ip;

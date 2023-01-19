@@ -1,6 +1,7 @@
 use std::fmt;
 
 const AGENT_ACCESS_TOKEN_PREFIX: &'static str = "agent_access_token";
+pub(crate) const AUTH_PREFIX: &'static str = "auth";
 
 pub enum Key {
     LoginBlockedByIp { ip_address: String },
@@ -9,6 +10,7 @@ pub enum Key {
     LoginFailedByUsername { username: String },
     AgentAccessToken { agent_id: String, token: String },
     ResetPasswordToken { token: String },
+    AuthAgentScopes { agent_id: String },
 }
 
 impl fmt::Display for Key {
@@ -27,6 +29,9 @@ impl fmt::Display for Key {
             }
             Self::ResetPasswordToken { token } => {
                 write!(f, "reset_password_token:{}", token)
+            }
+            Self::AuthAgentScopes { agent_id } => {
+                write!(f, "{}:agents:{}:scopes", AUTH_PREFIX, agent_id)
             }
         }
     }

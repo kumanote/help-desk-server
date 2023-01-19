@@ -52,6 +52,11 @@ pub(crate) fn increment<K: ToRedisArgs, V: ToRedisArgs + FromRedisValue>(
 }
 
 #[allow(dead_code)]
+pub(crate) fn keys<K: ToRedisArgs>(conn: &mut CacheConnection, key: K) -> Result<Vec<String>> {
+    conn.keys(key).map_err(Into::into)
+}
+
+#[allow(dead_code)]
 pub(crate) fn sadd<K: ToRedisArgs, V: ToRedisArgs>(
     conn: &mut CacheConnection,
     key: K,
@@ -76,6 +81,19 @@ pub(crate) fn sismember<K: ToRedisArgs, V: ToRedisArgs>(
     value: V,
 ) -> Result<bool> {
     conn.sismember(key, value).map_err(Into::into)
+}
+
+#[allow(dead_code)]
+pub(crate) fn smismember<K: ToRedisArgs, V: ToRedisArgs>(
+    conn: &mut CacheConnection,
+    key: K,
+    values: &[V],
+) -> Result<Vec<bool>> {
+    redis::cmd("SMISMEMBER")
+        .arg(key)
+        .arg(&values)
+        .query(conn)
+        .map_err(Into::into)
 }
 
 #[allow(dead_code)]

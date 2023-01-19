@@ -24,6 +24,10 @@ Start data storage processes by `docker-compose up`.
 - [NATS](https://github.com/nats-io/nats-server)
 - [Meilisearch](https://github.com/meilisearch/meilisearch)
 
+**notes**
+
+- dragonflydb version require `v0.10.0` or later. (we use `SMISMEMBER` command)
+
 ```bash
 % cd help-desk-server  # project root directory
 % docker-compose-up

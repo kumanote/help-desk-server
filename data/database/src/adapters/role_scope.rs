@@ -1,5 +1,5 @@
 use crate::entities::{NewRoleScope, RoleScope};
-use crate::schema::role_scopes;
+use crate::schema::{agent_roles, group_members, group_roles, role_scopes};
 use crate::{DbConnection, Result};
 use diesel::prelude::*;
 use diesel::{QueryDsl, RunQueryDsl};
@@ -30,6 +30,26 @@ pub fn get_list_by_role_ids(
 ) -> Result<Vec<RoleScope>> {
     role_scopes::table
         .filter(role_scopes::role_id.eq_any(role_ids))
+        .load::<RoleScope>(conn)
+        .map_err(Into::into)
+}
+
+pub fn get_list_by_agent_id(conn: &mut DbConnection, agent_id: &str) -> Result<Vec<RoleScope>> {
+    let agent_role_ids = agent_roles::table
+        .filter(agent_roles::agent_id.eq(agent_id))
+        .select(agent_roles::role_id);
+    let joined_group_ids = group_members::table
+        .filter(group_members::agent_id.eq(agent_id))
+        .select(group_members::group_id);
+    let group_role_ids = group_roles::table
+        .filter(group_roles::group_id.eq_any(joined_group_ids))
+        .select(group_roles::role_id);
+    role_scopes::table
+        .filter(
+            role_scopes::role_id
+                .eq_any(agent_role_ids)
+                .or(role_scopes::role_id.eq_any(group_role_ids)),
+        )
         .load::<RoleScope>(conn)
         .map_err(Into::into)
 }
