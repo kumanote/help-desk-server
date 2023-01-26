@@ -1,0 +1,16 @@
+[package]
+name = "agent-rest-config"
+version = "0.1.0"
+authors = ["Hiroki Tanaka <support@kumano-te.com>"]
+license = "MIT"
+repository = "https://github.com/kumanote/help-desk-server"
+edition = "2021"
+
+[dependencies]
+anyhow = { version = "1.0", features = ["backtrace"] }
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.6.0"
+
+[dev-dependencies]

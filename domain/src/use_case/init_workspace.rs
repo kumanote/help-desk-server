@@ -23,6 +23,8 @@ pub struct InitWorkspaceUseCaseInput {
     pub first_agent_locale: Locale,
 }
 
+pub type InitWorkspaceUseCaseOutput = Workspace;
+
 pub trait InitWorkspaceUseCase: Send + Sync + 'static {
     type Transaction;
     type WorkspaceRepository: WorkspaceRepository<Err = Error, Transaction = Self::Transaction>;
@@ -39,7 +41,11 @@ pub trait InitWorkspaceUseCase: Send + Sync + 'static {
     /// * initialize predefined roles.
     /// * create first agent.
     /// * create admin group and let first agent be an owner of the group.
-    fn execute(&self, tx: &mut Self::Transaction, params: InitWorkspaceUseCaseInput) -> Result<()>;
+    fn execute(
+        &self,
+        tx: &mut Self::Transaction,
+        params: InitWorkspaceUseCaseInput,
+    ) -> Result<InitWorkspaceUseCaseOutput>;
 }
 
 pub struct InitWorkspaceUseCaseImpl<
@@ -65,11 +71,11 @@ impl<
     > InitWorkspaceUseCaseImpl<WR, AR, GR, RR, RGR>
 {
     pub fn new(
+        workspace_repository: WR,
         agent_repository: AR,
         group_repository: GR,
         role_repository: RR,
         role_for_group_repository: RGR,
-        workspace_repository: WR,
     ) -> Self {
         Self {
             workspace_repository,
@@ -96,7 +102,11 @@ impl<
     type GroupRepository = GR;
     type RoleRepository = RR;
     type RoleForGroupRepository = RGR;
-    fn execute(&self, tx: &mut Self::Transaction, params: InitWorkspaceUseCaseInput) -> Result<()> {
+    fn execute(
+        &self,
+        tx: &mut Self::Transaction,
+        params: InitWorkspaceUseCaseInput,
+    ) -> Result<InitWorkspaceUseCaseOutput> {
         // check if there is no workspace in the DB.
         if self.workspace_repository.get(tx)?.is_some() {
             warn!("Initialize workspace process has been requested...although the system has an initialized workspace.");
@@ -177,7 +187,7 @@ impl<
         );
         self.group_repository
             .create_group_member(tx, &group_member)?;
-        Ok(())
+        Ok(workspace)
     }
 }
 

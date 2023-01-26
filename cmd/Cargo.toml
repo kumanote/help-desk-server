@@ -1,0 +1,23 @@
+[package]
+name = "help-desk-server"
+version = "0.1.0"
+authors = ["Hiroki Tanaka <support@kumano-te.com>"]
+license = "MIT"
+repository = "https://github.com/kumanote/help-desk-server"
+edition = "2021"
+
+[dependencies]
+anyhow = { version = "1.0", features = ["backtrace"] }
+thiserror = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+dotenv = "0.15.0"
+chrono = "0.4.23"
+futures = { version = "0.3" }
+tokio = { version = "1", features = ["full"] }
+clap = { version = "4.1", features = ["cargo", "derive"] }
+
+agent-rest-config = { path = "../config/agent-rest" }
+agent-rest-server = { path = "../server/agent-rest" }
+
+[dev-dependencies]

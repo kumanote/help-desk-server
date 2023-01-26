@@ -1,6 +1,9 @@
 [workspace]
 
 members = [
+    "cmd",
+    "config/agent-rest",
+    "server/agent-rest",
     "infrastructure",
     "domain",
     "data/cache",

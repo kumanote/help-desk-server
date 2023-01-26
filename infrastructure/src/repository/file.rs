@@ -2,7 +2,7 @@ use database::DbConnection;
 use domain::model::{File, FileId};
 use domain::repository::FileRepository;
 
-pub struct FileRepositoryImpl {}
+pub struct FileRepositoryImpl;
 
 impl FileRepository for FileRepositoryImpl {
     type Err = domain::Error;

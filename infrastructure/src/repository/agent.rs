@@ -2,7 +2,7 @@ use database::DbConnection;
 use domain::model::{Agent, AgentId};
 use domain::repository::AgentRepository;
 
-pub struct AgentRepositoryImpl {}
+pub struct AgentRepositoryImpl;
 
 impl AgentRepository for AgentRepositoryImpl {
     type Err = domain::Error;

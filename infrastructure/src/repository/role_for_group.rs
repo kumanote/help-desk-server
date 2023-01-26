@@ -2,7 +2,7 @@ use database::DbConnection;
 use domain::model::{RoleForGroup, RoleForGroupId};
 use domain::repository::RoleForGroupRepository;
 
-pub struct RoleForGroupRepositoryImpl {}
+pub struct RoleForGroupRepositoryImpl;
 
 impl RoleForGroupRepository for RoleForGroupRepositoryImpl {
     type Err = domain::Error;

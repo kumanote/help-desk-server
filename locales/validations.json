@@ -1,0 +1,12 @@
+{
+  "validations.invalid_request": {
+    "en": "Invalid request.",
+    "ja": "不正なリクエストです。",
+    "vi": "Invalid request."
+  },
+  "validations.input_error": {
+    "en": "There are one or more input errors",
+    "ja": "入力項目に誤りがあります。",
+    "vi": "Có một hoặc nhiều lỗi đầu vào"
+  }
+}

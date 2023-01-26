@@ -2,7 +2,7 @@ use database::DbConnection;
 use domain::model::{Group, GroupId, GroupMember};
 use domain::repository::GroupRepository;
 
-pub struct GroupRepositoryImpl {}
+pub struct GroupRepositoryImpl;
 
 impl GroupRepository for GroupRepositoryImpl {
     type Err = domain::Error;

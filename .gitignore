@@ -46,3 +46,7 @@ tmp/
 
 # credentials
 secrets/
+
+# config file
+app.toml
+!app.toml.example

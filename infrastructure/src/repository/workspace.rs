@@ -2,7 +2,7 @@ use database::DbConnection;
 use domain::model::Workspace;
 use domain::repository::WorkspaceRepository;
 
-pub struct WorkspaceRepositoryImpl {}
+pub struct WorkspaceRepositoryImpl;
 
 impl WorkspaceRepository for WorkspaceRepositoryImpl {
     type Err = domain::Error;
