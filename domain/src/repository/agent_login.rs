@@ -21,4 +21,9 @@ pub trait AgentLoginRepository: Send + Sync + 'static {
         token: &AgentAccessToken,
         ttl: Duration,
     ) -> Result<(), Self::Err>;
+    fn delete_access_token(
+        &self,
+        agent_id: &AgentId,
+        token: &AgentAccessToken,
+    ) -> Result<(), Self::Err>;
 }

@@ -69,6 +69,12 @@ impl HttpError {
             code: Some(code.to_string()),
         }
     }
+
+    pub fn new_unauthorized() -> Self {
+        Self::Unauthorized {
+            detail: json!("Could not verify credentials"),
+        }
+    }
 }
 
 impl IntoResponse for HttpError {
@@ -120,6 +126,14 @@ impl IntoResponse for HttpError {
     }
 }
 
+impl From<database::Error> for HttpError {
+    fn from(cause: database::Error) -> Self {
+        Self::InternalServerError {
+            cause: cause.into(),
+        }
+    }
+}
+
 impl From<database::R2D2Error> for HttpError {
     fn from(cause: database::R2D2Error) -> Self {
         Self::InternalServerError {
@@ -132,6 +146,14 @@ impl From<database::DieselError> for HttpError {
     fn from(cause: database::DieselError) -> Self {
         Self::InternalServerError {
             cause: anyhow!(cause),
+        }
+    }
+}
+
+impl From<cache::Error> for HttpError {
+    fn from(cause: cache::Error) -> Self {
+        Self::InternalServerError {
+            cause: cause.into(),
         }
     }
 }

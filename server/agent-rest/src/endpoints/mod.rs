@@ -15,6 +15,9 @@ pub fn router(state: AppState) -> Router {
             "/workspace",
             get(workspace::get::handler).post(workspace::init::handler),
         )
-        .route("/auth", post(auth::login::handler))
+        .route(
+            "/auth",
+            post(auth::login::handler).delete(auth::logout::handler),
+        )
         .with_state(state)
 }

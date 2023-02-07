@@ -12,6 +12,13 @@ pub fn create(conn: &mut DbConnection, entity: NewAgent) -> Result<usize> {
         .map_err(Into::into)
 }
 
+pub fn update_locale_by_id(conn: &mut DbConnection, locale: &str, id: &str) -> Result<usize> {
+    diesel::update(agents::dsl::agents.find(id))
+        .set(agents::locale.eq(locale))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn get_by_id(conn: &mut DbConnection, id: &str) -> Result<Option<Agent>> {
     let result = agents::table.find(id).first::<Agent>(conn);
     match result {

@@ -101,4 +101,14 @@ impl AgentLoginRepository for AgentLoginRepositoryImpl {
         cache::adapters::agent_access_token::set(&mut cache_conn, &agent_id, &token, ttl)?;
         Ok(())
     }
+
+    fn delete_access_token(
+        &self,
+        agent_id: &AgentId,
+        token: &AgentAccessToken,
+    ) -> Result<(), Self::Err> {
+        let mut cache_conn = self.cache_connection_pool.get()?;
+        cache::adapters::agent_access_token::delete(&mut cache_conn, &agent_id, &token)?;
+        Ok(())
+    }
 }
