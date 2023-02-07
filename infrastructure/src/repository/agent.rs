@@ -1,5 +1,5 @@
 use database::DbConnection;
-use domain::model::{Agent, AgentId};
+use domain::model::{Agent, AgentId, Email};
 use domain::repository::AgentRepository;
 
 pub struct AgentRepositoryImpl;
@@ -19,6 +19,15 @@ impl AgentRepository for AgentRepositoryImpl {
         id: &AgentId,
     ) -> Result<Option<Agent>, Self::Err> {
         let entity = database::adapters::agent::get_by_id(tx, &id)?;
+        Ok(entity.map(Into::into))
+    }
+
+    fn get_by_email(
+        &self,
+        tx: &mut Self::Transaction,
+        email: &Email,
+    ) -> Result<Option<Agent>, Self::Err> {
+        let entity = database::adapters::agent::get_by_email(tx, &email)?;
         Ok(entity.map(Into::into))
     }
 

@@ -30,4 +30,4 @@ queue = { path = "../data/queue" }
 
 [dev-dependencies]
 dotenv = "0.15.0"
-serial_test = "0.10.0"
+serial_test = "1.0.0"

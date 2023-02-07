@@ -4,6 +4,7 @@ pub use error::ServerError;
 pub type Result<T> = core::result::Result<T, HttpError>;
 
 mod config;
+mod constants;
 mod endpoints;
 mod request_parser;
 mod schema;

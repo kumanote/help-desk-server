@@ -1,9 +1,10 @@
+mod auth;
 mod health_check;
 mod index;
 mod workspace;
 
 use crate::AppState;
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum::Router;
 
 pub fn router(state: AppState) -> Router {
@@ -14,5 +15,6 @@ pub fn router(state: AppState) -> Router {
             "/workspace",
             get(workspace::get::handler).post(workspace::init::handler),
         )
+        .route("/auth", post(auth::login::handler))
         .with_state(state)
 }

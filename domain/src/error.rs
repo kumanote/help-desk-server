@@ -3,6 +3,10 @@ use thiserror::Error as ThisError;
 
 #[derive(ThisError, Debug)]
 pub enum Error {
+    #[error("Login is blocked due to too many attempt.")]
+    LoginBlocked,
+    #[error("Provided login information is authorized.")]
+    InvalidLoginCredential,
     #[error("UnsupportedLocale: {value}")]
     UnsupportedLocale { value: String },
     #[error("UnsupportedScope: {value}")]

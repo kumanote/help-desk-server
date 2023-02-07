@@ -50,6 +50,6 @@ pub async fn handler(
             .execute(db_connection, logic_input)
             .map_err(|cause| HttpError::from((cause, &locale)))
     })?;
-    let schema: Workspace = logic_output.into();
+    let schema = Workspace::from(logic_output);
     Ok(schema.into())
 }

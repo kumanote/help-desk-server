@@ -1,4 +1,14 @@
 {
+  "validations.login_blocked": {
+    "en": "This account is not be able to log in for a while due to too many failed attempts.",
+    "ja": "ログインの失敗回数が一定値を超えたため、このアカウントは暫くの間ログインできません。少し時間を待ってから再度お試しください。",
+    "vi": "Tài khoản này không thể đăng nhập trong một thời gian do quá nhiều lần đăng nhập không thành công."
+  },
+  "validations.invalid_login_credential": {
+    "en": "The combination of email address and password is incorrect.",
+    "ja": "メールアドレスとパスワードの組合せが正しくありません。",
+    "vi": "Mật khẩu không đúng."
+  },
   "validations.invalid_request": {
     "en": "Invalid request.",
     "ja": "不正なリクエストです。",

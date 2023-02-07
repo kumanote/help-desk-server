@@ -139,6 +139,12 @@ impl From<database::DieselError> for HttpError {
 impl From<(domain::Error, &domain::model::Locale)> for HttpError {
     fn from((cause, locale): (domain::Error, &domain::model::Locale)) -> Self {
         match cause {
+            domain::Error::LoginBlocked => {
+                Self::new_bad_request(t!("validations.login_blocked", locale.as_str()))
+            }
+            domain::Error::InvalidLoginCredential => {
+                Self::new_bad_request(t!("validations.invalid_login_credential", locale.as_str()))
+            }
             domain::Error::UnsupportedLocale { value: _ } => {
                 Self::new_bad_request(t!("validations.invalid_request", locale.as_str()))
             }

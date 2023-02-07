@@ -1,4 +1,4 @@
-use crate::model::{Agent, AgentId};
+use crate::model::{Agent, AgentId, Email};
 
 pub trait AgentRepository: Send + Sync + 'static {
     type Err;
@@ -8,6 +8,11 @@ pub trait AgentRepository: Send + Sync + 'static {
         &self,
         tx: &mut Self::Transaction,
         id: &AgentId,
+    ) -> Result<Option<Agent>, Self::Err>;
+    fn get_by_email(
+        &self,
+        tx: &mut Self::Transaction,
+        email: &Email,
     ) -> Result<Option<Agent>, Self::Err>;
     fn get_list_by_ids(
         &self,
