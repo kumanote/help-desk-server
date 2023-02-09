@@ -87,3 +87,11 @@ pub fn check_agent_has_all_scopes(
     let missed = results.contains(&false);
     Ok(!missed)
 }
+
+pub fn get_all_scopes(conn: &mut CacheConnection, agent_id: &str) -> Result<Vec<String>> {
+    let key = Key::AuthAgentScopes {
+        agent_id: agent_id.to_string(),
+    };
+    let key = key.to_string();
+    commands::smembers(conn, &key)
+}

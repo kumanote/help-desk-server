@@ -29,7 +29,7 @@ pub async fn handler(
     let workspace_repository = WorkspaceRepositoryImpl;
     let agent_repository = AgentRepositoryImpl;
     let group_repository = GroupRepositoryImpl;
-    let role_repository = RoleRepositoryImpl::new(state.cache_connection_pool.clone(), None);
+    let role_repository = RoleRepositoryImpl::new(state.cache_connection_pool.clone());
     let role_for_group_repository = RoleForGroupRepositoryImpl;
     let use_case = InitWorkspaceUseCaseImpl::new(
         workspace_repository,

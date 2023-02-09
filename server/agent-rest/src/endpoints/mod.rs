@@ -19,5 +19,6 @@ pub fn router(state: AppState) -> Router {
             "/auth",
             post(auth::login::handler).delete(auth::logout::handler),
         )
+        .route("/auth/scopes/", get(auth::get_scopes::handler))
         .with_state(state)
 }

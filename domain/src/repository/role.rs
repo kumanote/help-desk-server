@@ -32,4 +32,9 @@ pub trait RoleRepository: Send + Sync + 'static {
         agent_id: &AgentId,
         scopes: &Vec<Scope>,
     ) -> Result<bool, Self::Err>;
+    fn get_all_authorized_scopes_by_agent(
+        &self,
+        tx: &mut Self::Transaction,
+        agent_id: &AgentId,
+    ) -> Result<Vec<Scope>, Self::Err>;
 }

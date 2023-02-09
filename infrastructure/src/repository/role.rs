@@ -8,23 +8,25 @@ const DEFAULT_AGENT_SCOPES_CACHE_MINUTES: i64 = 30;
 
 pub struct RoleRepositoryImpl {
     cache_connection_pool: CacheConnectionPool,
-    agent_scopes_cache_ttl: Option<Duration>,
+    agent_scopes_cache_ttl: Duration,
 }
 
 impl RoleRepositoryImpl {
-    pub fn new(
+    pub fn new(cache_connection_pool: CacheConnectionPool) -> Self {
+        Self {
+            cache_connection_pool,
+            agent_scopes_cache_ttl: Duration::minutes(DEFAULT_AGENT_SCOPES_CACHE_MINUTES),
+        }
+    }
+
+    pub fn new_with_ttl(
         cache_connection_pool: CacheConnectionPool,
-        agent_scopes_cache_ttl: Option<Duration>,
+        agent_scopes_cache_ttl: Duration,
     ) -> Self {
         Self {
             cache_connection_pool,
             agent_scopes_cache_ttl,
         }
-    }
-
-    fn get_agent_scope_cache_ttl(&self) -> Duration {
-        self.agent_scopes_cache_ttl
-            .unwrap_or(Duration::minutes(DEFAULT_AGENT_SCOPES_CACHE_MINUTES))
     }
 }
 
@@ -203,7 +205,7 @@ impl RoleRepository for RoleRepositoryImpl {
                 &mut cache_conn,
                 &agent_id,
                 scopes_to_be_set,
-                self.get_agent_scope_cache_ttl(),
+                self.agent_scopes_cache_ttl,
             )?;
         }
         // if cache remains, check by scopes cache
@@ -214,5 +216,34 @@ impl RoleRepository for RoleRepositoryImpl {
             scopes,
         )
         .map_err(Into::into)
+    }
+
+    fn get_all_authorized_scopes_by_agent(
+        &self,
+        tx: &mut Self::Transaction,
+        agent_id: &AgentId,
+    ) -> Result<Vec<Scope>, Self::Err> {
+        let mut cache_conn = self.cache_connection_pool.get()?;
+        let cached_scopes =
+            cache::adapters::auth_agent_scopes::get_all_scopes(&mut cache_conn, &agent_id)?;
+        if cached_scopes.is_empty() {
+            // query all roles that user has and add them to cache.
+            let all_role_scopes =
+                database::adapters::role_scope::get_list_by_agent_id(tx, &agent_id)?;
+            let scopes: Vec<Scope> = all_role_scopes
+                .into_iter()
+                .map(|role_scope_entity| Scope::from(role_scope_entity.scope))
+                .collect();
+            // save cache
+            cache::adapters::auth_agent_scopes::add_scopes_to_agent(
+                &mut cache_conn,
+                &agent_id,
+                scopes.iter().map(|s| s.as_ref()).collect(),
+                self.agent_scopes_cache_ttl,
+            )?;
+            Ok(scopes)
+        } else {
+            Ok(cached_scopes.into_iter().map(Into::into).collect())
+        }
     }
 }
