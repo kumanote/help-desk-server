@@ -43,8 +43,8 @@ pub async fn start(app_config: AppConfig) -> std::result::Result<(), ServerError
         app_config.cache.max_connection_pool_size,
     )?;
     let queue_connection_pool = queue::new_pool(
-        &app_config.cache.url,
-        app_config.cache.max_connection_pool_size,
+        &app_config.queue.url,
+        app_config.queue.max_connection_pool_size,
     )?;
     let app_state = AppState {
         db_connection_pool,
