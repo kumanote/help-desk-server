@@ -50,7 +50,7 @@ table! {
 }
 
 table! {
-    role_scopes (role_id) {
+    role_scopes (role_id, scope) {
         role_id -> Varchar,
         scope -> Varchar,
     }

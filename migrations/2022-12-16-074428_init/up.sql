@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `role_scopes`
 (
     `role_id` varchar(26) NOT NULL,
     `scope` varchar(255) NOT NULL,
-    PRIMARY KEY (`role_id`) CLUSTERED,
+    PRIMARY KEY (`role_id`, `scope`) CLUSTERED,
     FOREIGN KEY `fk_role_scope_role_id` (`role_id`) references `roles`(`id`) ON DELETE CASCADE
 );
 

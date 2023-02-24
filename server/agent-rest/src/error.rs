@@ -113,14 +113,17 @@ impl IntoResponse for HttpError {
                     }
                 })),
             ),
-            Self::InternalServerError { cause: _ } => (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                Json(json!({
-                    "error": {
-                        "reasons": vec!["oops...unknown error occurred..."],
-                    }
-                })),
-            ),
+            Self::InternalServerError { cause } => {
+                eprintln!("{:?}", cause);
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    Json(json!({
+                        "error": {
+                            "reasons": vec!["oops...unknown error occurred..."],
+                        }
+                    })),
+                )
+            }
         }
         .into_response()
     }
