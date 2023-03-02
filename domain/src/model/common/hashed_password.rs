@@ -15,7 +15,7 @@ impl HashedPassword {
     }
 
     pub fn verify(&self, plain_password: &str) -> bool {
-        verify_password(self.as_str(), plain_password)
+        verify_password(plain_password, self.as_str())
     }
 
     #[inline(always)]
