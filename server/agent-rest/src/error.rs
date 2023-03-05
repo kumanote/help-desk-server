@@ -96,7 +96,7 @@ impl IntoResponse for HttpError {
                     })
                 };
                 (StatusCode::BAD_REQUEST, Json(body))
-            }
+            },
             Self::Unauthorized { detail } => (
                 StatusCode::UNAUTHORIZED,
                 Json(json!({
@@ -123,7 +123,7 @@ impl IntoResponse for HttpError {
                         }
                     })),
                 )
-            }
+            },
         }
         .into_response()
     }
@@ -166,28 +166,28 @@ impl From<(domain::Error, &domain::model::Locale)> for HttpError {
         match cause {
             domain::Error::LoginBlocked => {
                 Self::new_bad_request(t!("validations.login_blocked", locale.as_str()))
-            }
+            },
             domain::Error::InvalidLoginCredential => {
                 Self::new_bad_request(t!("validations.invalid_login_credential", locale.as_str()))
-            }
+            },
             domain::Error::UnsupportedLocale { value: _ } => {
                 Self::new_bad_request(t!("validations.invalid_request", locale.as_str()))
-            }
+            },
             domain::Error::UnsupportedScope { value: _ } => {
                 Self::new_bad_request(t!("validations.invalid_request", locale.as_str()))
-            }
+            },
             domain::Error::InvalidId { cause } => Self::InternalServerError {
                 cause: anyhow!(cause),
             },
             domain::Error::InvalidFormat => {
                 Self::new_bad_request(t!("validations.input_error", locale.as_str()))
-            }
+            },
             domain::Error::InvalidRequest => {
                 Self::new_bad_request(t!("validations.invalid_request", locale.as_str()))
-            }
+            },
             domain::Error::UnsupportedRteValue { value: _ } => {
                 Self::new_bad_request(t!("validations.input_error", locale.as_str()))
-            }
+            },
             domain::Error::SystemError { cause } => Self::InternalServerError { cause },
         }
     }

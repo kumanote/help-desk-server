@@ -13,7 +13,7 @@ impl fmt::Display for NatsSubject {
         match self {
             Self::Emails => {
                 write!(f, "{}", EMAILS)
-            }
+            },
         }
     }
 }

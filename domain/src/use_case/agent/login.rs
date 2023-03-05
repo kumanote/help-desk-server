@@ -105,7 +105,7 @@ impl<
                 self.agent_login_repository
                     .clear_failed_count(&params.username, &params.client_ip)?;
                 Ok(access_token)
-            }
+            },
             Err(err) => match err {
                 Error::SystemError { cause: _ } => Err(err),
                 _ => {
@@ -123,7 +123,7 @@ impl<
                             .set_login_blocked_by_ip(&params.client_ip)?;
                     }
                     Err(err)
-                }
+                },
             },
         }
     }

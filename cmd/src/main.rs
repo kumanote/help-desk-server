@@ -101,7 +101,7 @@ async fn main() {
         Err(err) => {
             eprintln!("{}", err);
             1
-        }
+        },
     };
     std::process::exit(exit_code);
 }
@@ -114,7 +114,7 @@ async fn run_app() -> Result<()> {
             let config_args: agent_rest_config::AppArgs = args.into();
             let app_config = agent_rest_config::AppConfig::build(config_file_path, config_args)?;
             agent_rest_server::start(app_config).await?;
-        }
+        },
     }
     Ok(())
 }

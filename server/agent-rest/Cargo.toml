@@ -1,33 +1,39 @@
 [package]
 name = "agent-rest-server"
 version = "0.1.0"
-authors = ["Hiroki Tanaka <support@kumano-te.com>"]
-license = "MIT"
-repository = "https://github.com/kumanote/help-desk-server"
-edition = "2021"
+# Workspace inherited keys
+authors = { workspace = true }
+edition = { workspace = true }
+homepage = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+repository = { workspace = true }
+rust-version = { workspace = true }
 
 [dependencies]
-anyhow = { version = "1.0", features = ["backtrace"] }
-thiserror = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-dotenv = "0.15.0"
-chrono = "0.4.23"
-futures = { version = "0.3" }
-tokio = { version = "1", features = ["full"] }
-axum = { version = "0.6.4", features = ["headers", "multipart", "macros"] }
-axum-client-ip = "0.3.1"
-tower-http = { version = "0.3", features = ["cors"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-once_cell = "1.17.0"
-internationalization = "0.0.3"
+# workspace members
+agent-rest-config = { workspace = true }
+infrastructure = { workspace = true }
+domain = { workspace = true }
+cache = { workspace = true }
+database = { workspace = true }
+queue = { workspace = true }
 
-agent-rest-config = { path = "../../config/agent-rest" }
-domain = { path = "../../domain" }
-infrastructure = { path = "../../infrastructure" }
-cache = { path = "../../data/cache" }
-database = { path = "../../data/database" }
-queue = { path = "../../data/queue" }
+# external libraries
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+futures = { workspace = true }
+tokio = { workspace = true }
+once_cell = { workspace = true }
+axum = { workspace = true }
+axum-client-ip = { workspace = true }
+tower-http = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+internationalization = { workspace = true }
 
 [dev-dependencies]
+dotenv = "0.15.0"

@@ -6,7 +6,7 @@ use axum::{
     debug_handler,
     extract::{Json, State},
 };
-use axum_client_ip::ClientIp;
+use axum_client_ip::InsecureClientIp;
 use domain::use_case::{AgentLoginUseCase, AgentLoginUseCaseImpl, AgentLoginUseCaseInput};
 use infrastructure::{AgentLoginRepositoryImpl, AgentRepositoryImpl};
 use serde::Deserialize;
@@ -19,7 +19,7 @@ pub struct LoginParams {
 
 #[debug_handler]
 pub async fn handler(
-    ClientIp(client_ip): ClientIp,
+    InsecureClientIp(client_ip): InsecureClientIp,
     Locale(locale): Locale,
     State(state): State<AppState>,
     Json(params): Json<LoginParams>,

@@ -1,19 +1,25 @@
 [package]
 name = "infrastructure"
 version = "0.1.0"
-authors = ["Hiroki Tanaka <support@kumano-te.com>"]
-license = "MIT"
-repository = "https://github.com/kumanote/help-desk-server"
-edition = "2021"
+# Workspace inherited keys
+authors = { workspace = true }
+edition = { workspace = true }
+homepage = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+repository = { workspace = true }
+rust-version = { workspace = true }
 
 [dependencies]
-chrono = "0.4.23"
+# workspace members
+domain = { workspace = true }
+cache = { workspace = true }
+database = { workspace = true }
+queue = { workspace = true }
 
-domain = { path = "../domain" }
-cache = { path = "../data/cache" }
-database = { path = "../data/database" }
-queue = { path = "../data/queue" }
+# external libraries
+chrono = { workspace = true }
 
 [dev-dependencies]
 dotenv = "0.15.0"
-serial_test = "0.10.0"
+serial_test = "1.0.0"

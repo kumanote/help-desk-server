@@ -19,20 +19,20 @@ impl fmt::Display for Key {
             Self::LoginBlockedByIp { ip_address } => write!(f, "login:blocked:ip:{}", ip_address),
             Self::LoginBlockedByUsername { username } => {
                 write!(f, "login:blocked:username:{}", username)
-            }
+            },
             Self::LoginFailedByIp { ip_address } => write!(f, "login:failed:ip:{}", ip_address),
             Self::LoginFailedByUsername { username } => {
                 write!(f, "login:failed:username:{}", username)
-            }
+            },
             Self::AgentAccessToken { agent_id, token } => {
                 write!(f, "{}:{}:{}", AGENT_ACCESS_TOKEN_PREFIX, agent_id, token)
-            }
+            },
             Self::ResetPasswordToken { token } => {
                 write!(f, "reset_password_token:{}", token)
-            }
+            },
             Self::AuthAgentScopes { agent_id } => {
                 write!(f, "{}:agents:{}:scopes", AUTH_PREFIX, agent_id)
-            }
+            },
         }
     }
 }
