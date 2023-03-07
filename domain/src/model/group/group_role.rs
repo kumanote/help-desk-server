@@ -29,7 +29,7 @@ impl GroupRoles {
             .roles
             .iter()
             .find(|attached| attached.id == role.id)
-            .is_some()
+            .is_none()
         {
             self.roles.push(role);
             false

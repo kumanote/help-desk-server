@@ -197,16 +197,18 @@ impl RoleRepository for RoleRepositoryImpl {
             // query all roles that user has and add them to cache.
             let all_role_scopes =
                 database::adapters::role_scope::get_list_by_agent_id(tx, &agent_id)?;
-            let scopes_to_be_set = all_role_scopes
+            let scopes_to_be_set: Vec<&str> = all_role_scopes
                 .iter()
                 .map(|role_scope_entity| role_scope_entity.scope.as_str())
                 .collect();
-            cache::adapters::auth_agent_scopes::add_scopes_to_agent(
-                &mut cache_conn,
-                &agent_id,
-                scopes_to_be_set,
-                self.agent_scopes_cache_ttl,
-            )?;
+            if scopes_to_be_set.len() > 0 {
+                cache::adapters::auth_agent_scopes::add_scopes_to_agent(
+                    &mut cache_conn,
+                    &agent_id,
+                    scopes_to_be_set,
+                    self.agent_scopes_cache_ttl,
+                )?;
+            }
         }
         // if cache remains, check by scopes cache
         let scopes = scopes.into_iter().map(AsRef::as_ref).collect();
@@ -235,12 +237,15 @@ impl RoleRepository for RoleRepositoryImpl {
                 .map(|role_scope_entity| Scope::from(role_scope_entity.scope))
                 .collect();
             // save cache
-            cache::adapters::auth_agent_scopes::add_scopes_to_agent(
-                &mut cache_conn,
-                &agent_id,
-                scopes.iter().map(|s| s.as_ref()).collect(),
-                self.agent_scopes_cache_ttl,
-            )?;
+            let scopes_entities: Vec<&str> = scopes.iter().map(|s| s.as_ref()).collect();
+            if scopes_entities.len() > 0 {
+                cache::adapters::auth_agent_scopes::add_scopes_to_agent(
+                    &mut cache_conn,
+                    &agent_id,
+                    scopes_entities,
+                    self.agent_scopes_cache_ttl,
+                )?;
+            }
             Ok(scopes)
         } else {
             Ok(cached_scopes.into_iter().map(Into::into).collect())
