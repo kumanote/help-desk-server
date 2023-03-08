@@ -7,6 +7,8 @@ pub enum Error {
     LoginBlocked,
     #[error("Provided login information is authorized.")]
     InvalidLoginCredential,
+    #[error("Provided email is already in use.")]
+    DuplicatedEmail,
     #[error("Provided password is not correct for editing security settings.")]
     WrongPasswordForEditingSecuritySettings,
     #[error("UnsupportedLocale: {value}")]

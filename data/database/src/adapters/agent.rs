@@ -12,6 +12,18 @@ pub fn create(conn: &mut DbConnection, entity: NewAgent) -> Result<usize> {
         .map_err(Into::into)
 }
 
+pub fn update_profile_by_id(
+    conn: &mut DbConnection,
+    email: &str,
+    name: &str,
+    id: &str,
+) -> Result<usize> {
+    diesel::update(agents::dsl::agents.find(id))
+        .set((agents::email.eq(email), agents::name.eq(name)))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn update_hashed_password_by_id(
     conn: &mut DbConnection,
     hashed_password: &str,

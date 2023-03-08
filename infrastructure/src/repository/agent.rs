@@ -1,5 +1,5 @@
 use database::DbConnection;
-use domain::model::{Agent, AgentId, Email, HashedPassword};
+use domain::model::{Agent, AgentId, AgentName, Email, HashedPassword};
 use domain::repository::AgentRepository;
 
 pub struct AgentRepositoryImpl;
@@ -10,6 +10,21 @@ impl AgentRepository for AgentRepositoryImpl {
 
     fn create(&self, tx: &mut Self::Transaction, agent: &Agent) -> Result<(), Self::Err> {
         database::adapters::agent::create(tx, agent.into())?;
+        Ok(())
+    }
+
+    fn update_profile(
+        &self,
+        tx: &mut Self::Transaction,
+        agent: &mut Agent,
+        email: Email,
+        name: AgentName,
+    ) -> Result<(), Self::Err> {
+        let updated_count =
+            database::adapters::agent::update_profile_by_id(tx, &email, &name, &agent.id)?;
+        assert_eq!(updated_count, 1);
+        agent.email = email;
+        agent.name = name;
         Ok(())
     }
 

@@ -170,6 +170,9 @@ impl From<(domain::Error, &domain::model::Locale)> for HttpError {
             domain::Error::InvalidLoginCredential => {
                 Self::new_bad_request(t!("validations.invalid_login_credential", locale.as_str()))
             },
+            domain::Error::DuplicatedEmail => {
+                Self::new_bad_request(t!("validations.email_is_already_in_use", locale.as_str()))
+            },
             domain::Error::WrongPasswordForEditingSecuritySettings => Self::new_bad_request(t!(
                 "validations.wrong_password_for_editing_security_settings",
                 locale.as_str()

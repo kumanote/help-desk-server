@@ -21,7 +21,10 @@ pub fn router(state: AppState) -> Router {
             post(auth::login::handler).delete(auth::logout::handler),
         )
         .route("/auth/scopes/", get(auth::get_scopes::handler))
-        .route("/agent/me", get(agent::me::get_profile::handler))
+        .route(
+            "/agent/me",
+            get(agent::me::get_profile::handler).put(agent::me::update_profile::handler),
+        )
         .route(
             "/agent/me/password",
             put(agent::me::change_password::handler),
