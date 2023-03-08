@@ -1,10 +1,11 @@
+mod agent;
 mod auth;
 mod health_check;
 mod index;
 mod workspace;
 
 use crate::AppState;
-use axum::routing::{get, post};
+use axum::routing::{get, post, put};
 use axum::Router;
 
 pub fn router(state: AppState) -> Router {
@@ -20,5 +21,9 @@ pub fn router(state: AppState) -> Router {
             post(auth::login::handler).delete(auth::logout::handler),
         )
         .route("/auth/scopes/", get(auth::get_scopes::handler))
+        .route(
+            "/agent/me/password",
+            put(agent::me::change_password::handler),
+        )
         .with_state(state)
 }

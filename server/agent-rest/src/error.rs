@@ -170,6 +170,10 @@ impl From<(domain::Error, &domain::model::Locale)> for HttpError {
             domain::Error::InvalidLoginCredential => {
                 Self::new_bad_request(t!("validations.invalid_login_credential", locale.as_str()))
             },
+            domain::Error::WrongPasswordForEditingSecuritySettings => Self::new_bad_request(t!(
+                "validations.wrong_password_for_editing_security_settings",
+                locale.as_str()
+            )),
             domain::Error::UnsupportedLocale { value: _ } => {
                 Self::new_bad_request(t!("validations.invalid_request", locale.as_str()))
             },

@@ -1,5 +1,5 @@
 use database::DbConnection;
-use domain::model::{Agent, AgentId, Email};
+use domain::model::{Agent, AgentId, Email, HashedPassword};
 use domain::repository::AgentRepository;
 
 pub struct AgentRepositoryImpl;
@@ -10,6 +10,22 @@ impl AgentRepository for AgentRepositoryImpl {
 
     fn create(&self, tx: &mut Self::Transaction, agent: &Agent) -> Result<(), Self::Err> {
         database::adapters::agent::create(tx, agent.into())?;
+        Ok(())
+    }
+
+    fn update_hashed_password(
+        &self,
+        tx: &mut Self::Transaction,
+        agent: &mut Agent,
+        hashed_password: HashedPassword,
+    ) -> Result<(), Self::Err> {
+        let updated_count = database::adapters::agent::update_hashed_password_by_id(
+            tx,
+            &hashed_password,
+            &agent.id,
+        )?;
+        assert_eq!(updated_count, 1);
+        agent.hashed_password = hashed_password;
         Ok(())
     }
 

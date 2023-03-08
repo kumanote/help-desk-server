@@ -1,9 +1,15 @@
-use crate::model::{Agent, AgentId, Email};
+use crate::model::{Agent, AgentId, Email, HashedPassword};
 
 pub trait AgentRepository: Send + Sync + 'static {
     type Err;
     type Transaction;
     fn create(&self, tx: &mut Self::Transaction, agent: &Agent) -> Result<(), Self::Err>;
+    fn update_hashed_password(
+        &self,
+        tx: &mut Self::Transaction,
+        agent: &mut Agent,
+        hashed_password: HashedPassword,
+    ) -> Result<(), Self::Err>;
     fn get_by_id(
         &self,
         tx: &mut Self::Transaction,

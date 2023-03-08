@@ -9,6 +9,11 @@
     "ja": "メールアドレスとパスワードの組合せが正しくありません。",
     "vi": "Mật khẩu không đúng."
   },
+  "validations.wrong_password_for_editing_security_settings": {
+    "en": "The current password is incorrect.",
+    "ja": "パスワードが正しくないため、変更処理を実行できません。",
+    "vi": "Mật khẩu không đúng."
+  },
   "validations.invalid_request": {
     "en": "Invalid request.",
     "ja": "不正なリクエストです。",

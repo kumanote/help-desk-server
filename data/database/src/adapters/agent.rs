@@ -12,6 +12,17 @@ pub fn create(conn: &mut DbConnection, entity: NewAgent) -> Result<usize> {
         .map_err(Into::into)
 }
 
+pub fn update_hashed_password_by_id(
+    conn: &mut DbConnection,
+    hashed_password: &str,
+    id: &str,
+) -> Result<usize> {
+    diesel::update(agents::dsl::agents.find(id))
+        .set(agents::hashed_password.eq(hashed_password))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn update_locale_by_id(conn: &mut DbConnection, locale: &str, id: &str) -> Result<usize> {
     diesel::update(agents::dsl::agents.find(id))
         .set(agents::locale.eq(locale))
