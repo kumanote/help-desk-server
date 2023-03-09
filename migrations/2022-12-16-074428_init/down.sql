@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS `faq_category_items`;
+DROP TABLE IF EXISTS `faq_item_contents`;
+DROP TABLE IF EXISTS `faq_items`;
+DROP TABLE IF EXISTS `faq_category_contents`;
+DROP TABLE IF EXISTS `faq_categories`;
+DROP TABLE IF EXISTS `faq_settings`;
 DROP TABLE IF EXISTS `group_roles`;
 DROP TABLE IF EXISTS `group_members`;
 DROP TABLE IF EXISTS `groups`;

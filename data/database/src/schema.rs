@@ -17,6 +17,56 @@ table! {
 }
 
 table! {
+    faq_categories (id) {
+        id -> Varchar,
+        slug -> Varchar,
+        display_order -> Unsigned<Integer>,
+    }
+}
+
+table! {
+    faq_category_contents (faq_category_id, locale) {
+        faq_category_id -> Varchar,
+        locale -> Varchar,
+        title -> Varchar,
+    }
+}
+
+table! {
+    faq_category_items (faq_category_id, faq_item_id) {
+        faq_category_id -> Varchar,
+        faq_item_id -> Varchar,
+        display_order -> Unsigned<Integer>,
+    }
+}
+
+table! {
+    faq_item_contents (faq_item_id, locale) {
+        faq_item_id -> Varchar,
+        locale -> Varchar,
+        title -> Varchar,
+        body -> Json,
+    }
+}
+
+table! {
+    faq_items (id) {
+        id -> Varchar,
+        slug -> Varchar,
+        is_published -> Bool,
+        published_at -> Nullable<Datetime>,
+        last_updated_at -> Nullable<Datetime>,
+    }
+}
+
+table! {
+    faq_settings (id) {
+        id -> Varchar,
+        data -> Json,
+    }
+}
+
+table! {
     files (id) {
         id -> Varchar,
         stored_filename -> Varchar,
@@ -81,6 +131,10 @@ table! {
 
 joinable!(agent_roles -> agents (agent_id));
 joinable!(agent_roles -> roles (role_id));
+joinable!(faq_category_contents -> faq_categories (faq_category_id));
+joinable!(faq_category_items -> faq_categories (faq_category_id));
+joinable!(faq_category_items -> faq_items (faq_item_id));
+joinable!(faq_item_contents -> faq_items (faq_item_id));
 joinable!(group_members -> agents (agent_id));
 joinable!(group_members -> groups (group_id));
 joinable!(group_members -> roles_for_group (role_id));
@@ -91,6 +145,12 @@ joinable!(role_scopes -> roles (role_id));
 allow_tables_to_appear_in_same_query!(
     agent_roles,
     agents,
+    faq_categories,
+    faq_category_contents,
+    faq_category_items,
+    faq_item_contents,
+    faq_items,
+    faq_settings,
     files,
     group_members,
     group_roles,

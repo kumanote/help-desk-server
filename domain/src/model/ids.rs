@@ -88,5 +88,6 @@ def_id!(GroupId);
 def_id!(RoleId);
 def_id!(RoleForGroupId);
 def_id!(FileId);
+def_id!(FaqSettingsId);
 def_id!(FaqCategoryId);
 def_id!(FaqItemId);

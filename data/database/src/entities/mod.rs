@@ -1,5 +1,11 @@
 mod agent;
 mod agent_role;
+mod faq_category;
+mod faq_category_content;
+mod faq_category_item;
+mod faq_item;
+mod faq_item_content;
+mod faq_settings;
 mod file;
 mod group;
 mod group_member;
@@ -11,6 +17,12 @@ mod workspace;
 
 pub use agent::*;
 pub use agent_role::*;
+pub use faq_category::*;
+pub use faq_category_content::*;
+pub use faq_category_item::*;
+pub use faq_item::*;
+pub use faq_item_content::*;
+pub use faq_settings::*;
 pub use file::*;
 pub use group::*;
 pub use group_member::*;
