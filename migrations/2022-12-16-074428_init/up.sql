@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `agents`
     `name` varchar(100) NOT NULL,
     `locale` varchar(31) NOT NULL,
     `is_active` boolean NOT NULL,
-    UNIQUE `uk_agent_email` (email),
+    UNIQUE `uk_agent_email` (`email`),
     PRIMARY KEY (`id`) CLUSTERED
 );
 
@@ -86,4 +86,62 @@ CREATE TABLE IF NOT EXISTS `group_roles`
     PRIMARY KEY (`group_id`, `role_id`) CLUSTERED,
     FOREIGN KEY `fk_group_role_group_id` (`group_id`) references `groups`(`id`) ON DELETE CASCADE,
     FOREIGN KEY `fk_group_role_role_id` (`role_id`) references `roles`(`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS `faq_settings`
+(
+    `id` varchar(26) NOT NULL,
+    `data` json NOT NULL,
+    PRIMARY KEY (`id`) CLUSTERED
+);
+
+CREATE TABLE IF NOT EXISTS `faq_categories`
+(
+    `id` varchar(26) NOT NULL,
+    `slug` varchar(50) NOT NULL,
+    `display_order` int(32) UNSIGNED NOT NULL,
+    PRIMARY KEY (`id`) CLUSTERED,
+    UNIQUE `uk_faq_category_slug` (`slug`),
+    INDEX `idx_faq_category_by_display_order` (`display_order`)
+);
+
+CREATE TABLE IF NOT EXISTS `faq_category_contents`
+(
+    `faq_category_id` varchar(26) NOT NULL,
+    `locale` varchar(31) NOT NULL,
+    `title` varchar(100) NOT NULL,
+    PRIMARY KEY (`faq_category_id`, `locale`) CLUSTERED,
+    FOREIGN KEY `fk_faq_category_content_faq_category_id` (`faq_category_id`) references faq_categories(`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS `faq_items`
+(
+    `id` varchar(26) NOT NULL,
+    `slug` varchar(50) NOT NULL,
+    `is_published` boolean NOT NULL,
+    `published_at` datetime NULL,
+    `last_updated_at` datetime NULL,
+    PRIMARY KEY (`id`) CLUSTERED,
+    UNIQUE `uk_faq_item_slug` (`slug`),
+    INDEX `idx_faq_item_by_last_updated_at` (`last_updated_at`, `is_published`)
+);
+
+CREATE TABLE IF NOT EXISTS `faq_item_contents`
+(
+    `faq_item_id` varchar(26) NOT NULL,
+    `locale` varchar(31) NOT NULL,
+    `title` varchar(100) NOT NULL,
+    `body` json NOT NULL,
+    PRIMARY KEY (`faq_item_id`, `locale`) CLUSTERED,
+    FOREIGN KEY `fk_faq_item_content_faq_item_id` (`faq_item_id`) references faq_items(`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS `faq_category_items`
+(
+    `faq_category_id` varchar(26) NOT NULL,
+    `faq_item_id` varchar(26) NOT NULL,
+    `display_order` int(32) UNSIGNED NOT NULL,
+    PRIMARY KEY (`faq_category_id`, `faq_item_id`) CLUSTERED,
+    FOREIGN KEY `fk_faq_category_item_faq_category_id` (`faq_category_id`) references faq_categories(`id`) ON DELETE CASCADE,
+    FOREIGN KEY `fk_faq_category_item_faq_item_id` (`faq_item_id`) references faq_items(`id`) ON DELETE CASCADE
 );

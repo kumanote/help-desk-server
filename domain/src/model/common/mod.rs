@@ -1,23 +1,21 @@
-mod rte;
-pub use rte::*;
-
+mod content_locale;
 mod email;
-pub use email::*;
-
 mod hashed_password;
-pub use hashed_password::*;
-
 mod locale;
-pub use locale::*;
-
 mod mime_type;
-pub use mime_type::*;
-
+mod rte;
 mod scope;
-pub use scope::*;
-
 mod scope_for_group;
-pub use scope_for_group::*;
-
 mod slug;
+mod url;
+
+pub use content_locale::*;
+pub use email::*;
+pub use hashed_password::*;
+pub use locale::*;
+pub use mime_type::*;
+pub use rte::*;
+pub use scope::*;
+pub use scope_for_group::*;
 pub use slug::*;
+pub use url::*;
