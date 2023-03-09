@@ -29,6 +29,14 @@ impl ContentLocale {
     pub fn all() -> Vec<Self> {
         vec![Self::EnUs, Self::JaJp]
     }
+
+    pub fn text(&self) -> &'static str {
+        match self {
+            Self::EnUs => "English (US)",
+            Self::JaJp => "日本語",
+            Self::ViVN => "Tiếng Việt",
+        }
+    }
 }
 
 impl AsRef<str> for ContentLocale {

@@ -7,6 +7,15 @@ pub struct FaqSettings {
     pub data: FaqSettingsData,
 }
 
+impl Default for FaqSettings {
+    fn default() -> Self {
+        Self {
+            id: FaqSettingsId::generate(),
+            data: FaqSettingsData::default(),
+        }
+    }
+}
+
 impl<'a> Into<database::entities::NewFaqSettings<'a>> for &'a FaqSettings {
     fn into(self) -> database::entities::NewFaqSettings<'a> {
         database::entities::NewFaqSettings {
@@ -25,7 +34,7 @@ impl From<database::entities::FaqSettings> for FaqSettings {
     }
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 pub struct FaqSettingsData {
     /// service url (so that user can go back to service web site)
     pub home_url: Option<Url>,
