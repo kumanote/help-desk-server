@@ -1,5 +1,6 @@
 mod agent;
 mod agent_login;
+mod faq;
 mod file;
 mod group;
 mod role;
@@ -8,6 +9,7 @@ mod workspace;
 
 pub use agent::*;
 pub use agent_login::*;
+pub use faq::*;
 pub use file::*;
 pub use group::*;
 pub use role::*;

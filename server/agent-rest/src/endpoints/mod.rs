@@ -1,5 +1,7 @@
 mod agent;
 mod auth;
+mod faq;
+mod general;
 mod health_check;
 mod index;
 mod workspace;
@@ -22,12 +24,20 @@ pub fn router(state: AppState) -> Router {
         )
         .route("/auth/scopes/", get(auth::get_scopes::handler))
         .route(
-            "/agent/me",
+            "/agents/me",
             get(agent::me::get_profile::handler).put(agent::me::update_profile::handler),
         )
         .route(
-            "/agent/me/password",
+            "/agents/me/password",
             put(agent::me::change_password::handler),
+        )
+        .route(
+            "/faq/settings",
+            get(faq::settings::get::handler).put(faq::settings::update::handler),
+        )
+        .route(
+            "/general/faq_content_locales/",
+            get(general::get_faq_content_locales::handler),
         )
         .with_state(state)
 }

@@ -12,7 +12,7 @@ pub fn create(conn: &mut DbConnection, entity: NewFaqSettings) -> Result<usize> 
         .map_err(Into::into)
 }
 
-pub fn update_by_id(conn: &mut DbConnection, data: &serde_json::Value, id: &str) -> Result<usize> {
+pub fn update(conn: &mut DbConnection, data: &serde_json::Value, id: &str) -> Result<usize> {
     diesel::update(faq_settings::dsl::faq_settings.find(id))
         .set(faq_settings::data.eq(data))
         .execute(conn)
