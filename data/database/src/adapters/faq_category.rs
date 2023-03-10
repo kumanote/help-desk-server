@@ -1,5 +1,5 @@
 use crate::entities::{FaqCategory, NewFaqCategory};
-use crate::schema::faq_categories;
+use crate::schema::{faq_categories, faq_category_contents};
 use crate::{DbConnection, Result};
 use diesel::dsl::max;
 use diesel::prelude::*;
@@ -94,4 +94,42 @@ pub fn get_list_by_ids(conn: &mut DbConnection, ids: &Vec<&str>) -> Result<Vec<F
         .filter(faq_categories::id.eq_any(ids))
         .load::<FaqCategory>(conn)
         .map_err(Into::into)
+}
+
+pub fn search_by_text(
+    conn: &mut DbConnection,
+    text: Option<&str>,
+    limit: i64,
+    offset: i64,
+) -> Result<(i64, Vec<FaqCategory>)> {
+    let total = build_query_for_search_by_text(text)
+        .count()
+        .get_result(conn)?;
+    let results = if total > 0 {
+        build_query_for_search_by_text(text)
+            .order((
+                faq_categories::display_order.asc(),
+                faq_categories::id.desc(),
+            ))
+            .limit(limit)
+            .offset(offset)
+            .load::<FaqCategory>(conn)?
+    } else {
+        vec![]
+    };
+    Ok((total, results))
+}
+
+fn build_query_for_search_by_text(
+    text: Option<&str>,
+) -> faq_categories::BoxedQuery<diesel::mysql::Mysql> {
+    let mut query = faq_categories::table.into_boxed();
+    let like = format!("%{}%", text.unwrap_or_default());
+    let target_ids = faq_category_contents::table
+        .filter(faq_category_contents::title.like(like))
+        .select(faq_category_contents::faq_category_id);
+    if text.is_some() {
+        query = query.filter(faq_categories::id.eq_any(target_ids))
+    }
+    query
 }

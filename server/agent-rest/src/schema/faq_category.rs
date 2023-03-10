@@ -1,5 +1,5 @@
 use super::FaqCategoryContent;
-use domain::{model, use_case::CreateFaqCategoryUseCaseOutput};
+use domain::model;
 use serde::Serialize;
 
 #[derive(Debug, Serialize)]
@@ -22,10 +22,13 @@ impl From<model::FaqCategory> for FaqCategory {
     }
 }
 
-impl From<CreateFaqCategoryUseCaseOutput> for FaqCategory {
-    fn from(value: CreateFaqCategoryUseCaseOutput) -> Self {
-        let mut result = Self::from(value.category);
-        result.contents = Some(value.contents.into_iter().map(Into::into).collect());
-        result
+impl From<model::FaqCategoryWithContents> for FaqCategory {
+    fn from(value: model::FaqCategoryWithContents) -> Self {
+        Self {
+            id: value.id.into(),
+            slug: value.slug.into(),
+            display_order: value.display_order,
+            contents: Some(value.contents.into_iter().map(Into::into).collect()),
+        }
     }
 }

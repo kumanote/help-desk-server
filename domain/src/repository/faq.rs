@@ -1,4 +1,7 @@
-use crate::model::{FaqCategory, FaqCategoryContent, FaqSettings, FaqSettingsData, Slug};
+use crate::model::{
+    FaqCategory, FaqCategoryContent, FaqCategoryWithContents, FaqSettings, FaqSettingsData,
+    PagingResult, Slug,
+};
 
 pub trait FaqRepository: Send + Sync + 'static {
     type Err;
@@ -29,4 +32,11 @@ pub trait FaqRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         slug: &Slug,
     ) -> Result<Option<FaqCategory>, Self::Err>;
+    fn search_categories_by_text(
+        &self,
+        tx: &mut Self::Transaction,
+        text: Option<&str>,
+        limit: u64,
+        offset: u64,
+    ) -> Result<PagingResult<FaqCategoryWithContents>, Self::Err>;
 }

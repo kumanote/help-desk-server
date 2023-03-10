@@ -1,6 +1,7 @@
 use crate::{
     model::{
-        FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryTitle, FaqContentLocale, Slug,
+        FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryTitle, FaqCategoryWithContents,
+        FaqContentLocale, Slug,
     },
     repository::FaqRepository,
     Error, Result,
@@ -17,10 +18,7 @@ pub struct CreateFaqCategoryUseCaseInput {
     pub contents: Vec<CreateFaqCategoryContent>,
 }
 
-pub struct CreateFaqCategoryUseCaseOutput {
-    pub category: FaqCategory,
-    pub contents: Vec<FaqCategoryContent>,
-}
+pub type CreateFaqCategoryUseCaseOutput = FaqCategoryWithContents;
 
 pub trait CreateFaqCategoryUseCase: Send + Sync + 'static {
     type Transaction;
@@ -96,6 +94,6 @@ impl<TX, FR: FaqRepository<Err = Error, Transaction = TX>> CreateFaqCategoryUseC
                 .create_category_content(tx, &category_content)?;
             contents.push(category_content);
         }
-        Ok(CreateFaqCategoryUseCaseOutput { category, contents })
+        Ok(CreateFaqCategoryUseCaseOutput::from((category, contents)))
     }
 }

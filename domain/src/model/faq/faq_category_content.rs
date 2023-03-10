@@ -26,3 +26,13 @@ impl From<database::entities::FaqCategoryContent> for FaqCategoryContent {
         }
     }
 }
+
+impl From<&database::entities::FaqCategoryContent> for FaqCategoryContent {
+    fn from(value: &database::entities::FaqCategoryContent) -> Self {
+        Self {
+            faq_category_id: value.faq_category_id.clone().into(),
+            locale: value.locale.clone().into(),
+            title: value.title.clone().into(),
+        }
+    }
+}

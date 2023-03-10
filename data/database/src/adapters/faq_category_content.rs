@@ -58,3 +58,13 @@ pub fn get_list_by_faq_category_id(
         .load::<FaqCategoryContent>(conn)
         .map_err(Into::into)
 }
+
+pub fn get_list_by_faq_category_ids(
+    conn: &mut DbConnection,
+    faq_category_ids: &Vec<&str>,
+) -> Result<Vec<FaqCategoryContent>> {
+    faq_category_contents::table
+        .filter(faq_category_contents::faq_category_id.eq_any(faq_category_ids))
+        .load::<FaqCategoryContent>(conn)
+        .map_err(Into::into)
+}
