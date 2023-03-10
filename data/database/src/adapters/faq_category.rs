@@ -70,6 +70,19 @@ pub fn get_by_id(conn: &mut DbConnection, id: &str) -> Result<Option<FaqCategory
     }
 }
 
+pub fn get_by_slug(conn: &mut DbConnection, slug: &str) -> Result<Option<FaqCategory>> {
+    let result = faq_categories::table
+        .filter(faq_categories::slug.eq(slug))
+        .first::<FaqCategory>(conn);
+    match result {
+        Ok(entity) => Ok(Some(entity)),
+        Err(err) => match err {
+            Error::NotFound => Ok(None),
+            _ => Err(err.into()),
+        },
+    }
+}
+
 pub fn get_max_display_order(conn: &mut DbConnection) -> Result<Option<u32>> {
     Ok(faq_categories::table
         .select(max(faq_categories::display_order))

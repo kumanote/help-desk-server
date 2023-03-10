@@ -9,6 +9,8 @@ pub enum Error {
     InvalidLoginCredential,
     #[error("Provided email is already in use.")]
     DuplicatedEmail,
+    #[error("Provided slug is already in use.")]
+    DuplicatedSlug,
     #[error("Provided password is not correct for editing security settings.")]
     WrongPasswordForEditingSecuritySettings,
     #[error("UnsupportedLocale: {value}")]
