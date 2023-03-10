@@ -1,4 +1,4 @@
-use crate::model::{FaqCategoryId, Slug};
+use crate::model::{FaqCategoryContent, FaqCategoryId, Slug};
 
 #[derive(Debug, Clone)]
 pub struct FaqCategory {
@@ -23,6 +23,25 @@ impl From<database::entities::FaqCategory> for FaqCategory {
             id: value.id.into(),
             slug: value.slug.into(),
             display_order: value.display_order,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct FaqCategoryWithContents {
+    pub id: FaqCategoryId,
+    pub slug: Slug,
+    pub display_order: u32,
+    pub contents: Vec<FaqCategoryContent>,
+}
+
+impl From<(FaqCategory, Vec<FaqCategoryContent>)> for FaqCategoryWithContents {
+    fn from((category, contents): (FaqCategory, Vec<FaqCategoryContent>)) -> Self {
+        Self {
+            id: category.id,
+            slug: category.slug,
+            display_order: category.display_order,
+            contents,
         }
     }
 }

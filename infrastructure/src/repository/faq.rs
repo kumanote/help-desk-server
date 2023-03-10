@@ -1,5 +1,8 @@
 use database::DbConnection;
-use domain::model::{FaqCategory, FaqCategoryContent, FaqSettings, FaqSettingsData, Slug};
+use domain::model::{
+    FaqCategory, FaqCategoryContent, FaqCategoryWithContents, FaqSettings, FaqSettingsData,
+    PagingResult, Slug,
+};
 use domain::repository::FaqRepository;
 
 pub struct FaqRepositoryImpl;
@@ -62,5 +65,45 @@ impl FaqRepository for FaqRepositoryImpl {
     ) -> Result<Option<FaqCategory>, Self::Err> {
         let entity = database::adapters::faq_category::get_by_slug(tx, &slug)?;
         Ok(entity.map(Into::into))
+    }
+
+    fn search_categories_by_text(
+        &self,
+        tx: &mut Self::Transaction,
+        text: Option<&str>,
+        limit: u64,
+        offset: u64,
+    ) -> Result<PagingResult<FaqCategoryWithContents>, Self::Err> {
+        let (total, category_entities) = database::adapters::faq_category::search_by_text(
+            tx,
+            text,
+            limit as i64,
+            offset as i64,
+        )?;
+        let category_ids: Vec<&str> = category_entities
+            .iter()
+            .map(|category| category.id.as_str())
+            .collect();
+        let content_entities =
+            database::adapters::faq_category_content::get_list_by_faq_category_ids(
+                tx,
+                &category_ids,
+            )?;
+        let list = category_entities
+            .into_iter()
+            .map(|category_entity| {
+                let contents = content_entities
+                    .iter()
+                    .filter(|c| c.faq_category_id.as_str() == category_entity.id.as_str())
+                    .map(FaqCategoryContent::from)
+                    .collect();
+                let category = FaqCategory::from(category_entity);
+                FaqCategoryWithContents::from((category, contents))
+            })
+            .collect();
+        Ok(PagingResult {
+            total: total as u64,
+            list,
+        })
     }
 }
