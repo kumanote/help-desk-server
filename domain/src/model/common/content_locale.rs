@@ -27,7 +27,7 @@ impl ContentLocale {
     }
 
     pub fn all() -> Vec<Self> {
-        vec![Self::EnUs, Self::JaJp]
+        vec![Self::EnUs, Self::JaJp, Self::ViVN]
     }
 
     pub fn text(&self) -> &'static str {

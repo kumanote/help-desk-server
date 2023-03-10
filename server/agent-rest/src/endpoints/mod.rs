@@ -35,6 +35,7 @@ pub fn router(state: AppState) -> Router {
             "/faq/settings",
             get(faq::settings::get::handler).put(faq::settings::update::handler),
         )
+        .route("/faq/categories/", post(faq::category::create::handler))
         .route(
             "/general/faq_content_locales/",
             get(general::get_faq_content_locales::handler),
