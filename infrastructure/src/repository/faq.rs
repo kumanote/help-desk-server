@@ -1,7 +1,7 @@
 use database::DbConnection;
 use domain::model::{
-    FaqCategory, FaqCategoryContent, FaqCategoryWithContents, FaqSettings, FaqSettingsData,
-    PagingResult, Slug,
+    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryWithContents, FaqSettings,
+    FaqSettingsData, PagingResult, Slug,
 };
 use domain::repository::FaqRepository;
 
@@ -105,5 +105,22 @@ impl FaqRepository for FaqRepositoryImpl {
             total: total as u64,
             list,
         })
+    }
+
+    fn get_category_with_contents_by_id(
+        &self,
+        tx: &mut Self::Transaction,
+        id: &FaqCategoryId,
+    ) -> Result<Option<FaqCategoryWithContents>, Self::Err> {
+        let entity = database::adapters::faq_category::get_by_id(tx, &id)?;
+        if entity.is_none() {
+            return Ok(None);
+        }
+        let category = FaqCategory::from(entity.unwrap());
+        let content_entities =
+            database::adapters::faq_category_content::get_list_by_faq_category_id(tx, &id)?;
+        let contents: Vec<FaqCategoryContent> =
+            content_entities.into_iter().map(Into::into).collect();
+        Ok(Some((category, contents).into()))
     }
 }

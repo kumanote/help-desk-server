@@ -1,6 +1,6 @@
 use crate::model::{
-    FaqCategory, FaqCategoryContent, FaqCategoryWithContents, FaqSettings, FaqSettingsData,
-    PagingResult, Slug,
+    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryWithContents, FaqSettings,
+    FaqSettingsData, PagingResult, Slug,
 };
 
 pub trait FaqRepository: Send + Sync + 'static {
@@ -39,4 +39,9 @@ pub trait FaqRepository: Send + Sync + 'static {
         limit: u64,
         offset: u64,
     ) -> Result<PagingResult<FaqCategoryWithContents>, Self::Err>;
+    fn get_category_with_contents_by_id(
+        &self,
+        tx: &mut Self::Transaction,
+        id: &FaqCategoryId,
+    ) -> Result<Option<FaqCategoryWithContents>, Self::Err>;
 }
