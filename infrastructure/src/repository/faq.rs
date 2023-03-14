@@ -123,4 +123,25 @@ impl FaqRepository for FaqRepositoryImpl {
             content_entities.into_iter().map(Into::into).collect();
         Ok(Some((category, contents).into()))
     }
+
+    fn update_category_with_contents(
+        &self,
+        tx: &mut Self::Transaction,
+        category_with_contents: &mut FaqCategoryWithContents,
+        slug: Slug,
+        contents: Vec<FaqCategoryContent>,
+    ) -> Result<(), Self::Err> {
+        // delete and creates contents
+        database::adapters::faq_category_content::delete_by_faq_category_id(
+            tx,
+            &category_with_contents.id,
+        )?;
+        for content in &contents {
+            database::adapters::faq_category_content::create(tx, content.into())?;
+        }
+        // update slug
+        database::adapters::faq_category::update_slug_by_id(tx, &slug, &category_with_contents.id)?;
+        category_with_contents.slug = slug;
+        Ok(())
+    }
 }

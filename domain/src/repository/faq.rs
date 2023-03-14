@@ -44,4 +44,11 @@ pub trait FaqRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         id: &FaqCategoryId,
     ) -> Result<Option<FaqCategoryWithContents>, Self::Err>;
+    fn update_category_with_contents(
+        &self,
+        tx: &mut Self::Transaction,
+        category_with_contents: &mut FaqCategoryWithContents,
+        slug: Slug,
+        contents: Vec<FaqCategoryContent>,
+    ) -> Result<(), Self::Err>;
 }
