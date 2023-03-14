@@ -25,6 +25,8 @@ pub enum Error {
     InvalidFormat,
     #[error("InvalidRequest")]
     InvalidRequest,
+    #[error("DataNotFound")]
+    DataNotFound,
     #[error("UnsupportedRteValue: {value}")]
     UnsupportedRteValue { value: String },
     #[error("SystemError: {cause}")]

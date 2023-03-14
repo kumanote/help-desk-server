@@ -49,6 +49,8 @@ pub enum HttpError {
     },
     #[error("Unauthorized: {detail}")]
     Unauthorized { detail: serde_json::Value },
+    #[error("NotFound: {detail}")]
+    NotFound { detail: serde_json::Value },
     #[error("ServiceUnavailable: {detail}")]
     ServiceUnavailable { detail: serde_json::Value },
     #[error("InternalServerError: {cause}")]
@@ -75,6 +77,12 @@ impl HttpError {
             detail: json!("Could not verify credentials"),
         }
     }
+
+    pub fn not_found() -> Self {
+        Self::NotFound {
+            detail: json!("The resource not found"),
+        }
+    }
 }
 
 impl IntoResponse for HttpError {
@@ -99,6 +107,14 @@ impl IntoResponse for HttpError {
             },
             Self::Unauthorized { detail } => (
                 StatusCode::UNAUTHORIZED,
+                Json(json!({
+                    "error": {
+                        "reasons": vec![detail],
+                    }
+                })),
+            ),
+            Self::NotFound { detail } => (
+                StatusCode::NOT_FOUND,
                 Json(json!({
                     "error": {
                         "reasons": vec![detail],
@@ -195,6 +211,7 @@ impl From<(domain::Error, &domain::model::Locale)> for HttpError {
             domain::Error::InvalidRequest => {
                 Self::new_bad_request(t!("validations.invalid_request", locale.as_str()))
             },
+            domain::Error::DataNotFound => Self::not_found(),
             domain::Error::UnsupportedRteValue { value: _ } => {
                 Self::new_bad_request(t!("validations.input_error", locale.as_str()))
             },
