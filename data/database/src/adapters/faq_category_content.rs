@@ -12,10 +12,13 @@ pub fn create(conn: &mut DbConnection, entity: NewFaqCategoryContent) -> Result<
         .map_err(Into::into)
 }
 
-pub fn delete_by_pk(conn: &mut DbConnection, faq_category_id: &str, locale: &str) -> Result<usize> {
-    diesel::delete(faq_category_contents::table.find((faq_category_id, locale)))
-        .execute(conn)
-        .map_err(Into::into)
+pub fn delete_by_faq_category_id(conn: &mut DbConnection, faq_category_id: &str) -> Result<usize> {
+    diesel::delete(
+        faq_category_contents::table
+            .filter(faq_category_contents::faq_category_id.eq(faq_category_id)),
+    )
+    .execute(conn)
+    .map_err(Into::into)
 }
 
 pub fn update_title_by_pk(
