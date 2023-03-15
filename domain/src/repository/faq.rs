@@ -39,6 +39,11 @@ pub trait FaqRepository: Send + Sync + 'static {
         limit: u64,
         offset: u64,
     ) -> Result<PagingResult<FaqCategoryWithContents>, Self::Err>;
+    fn get_category_by_id(
+        &self,
+        tx: &mut Self::Transaction,
+        id: &FaqCategoryId,
+    ) -> Result<Option<FaqCategory>, Self::Err>;
     fn get_category_with_contents_by_id(
         &self,
         tx: &mut Self::Transaction,
@@ -55,5 +60,12 @@ pub trait FaqRepository: Send + Sync + 'static {
         &self,
         tx: &mut Self::Transaction,
         category_with_contents: FaqCategoryWithContents,
+    ) -> Result<(), Self::Err>;
+    fn reorder_faq_category(
+        &self,
+        tx: &mut Self::Transaction,
+        objective: FaqCategory,
+        target: FaqCategory,
+        append: bool,
     ) -> Result<(), Self::Err>;
 }
