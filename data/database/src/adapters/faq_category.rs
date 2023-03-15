@@ -13,6 +13,12 @@ pub fn create(conn: &mut DbConnection, entity: NewFaqCategory) -> Result<usize> 
         .map_err(Into::into)
 }
 
+pub fn delete_by_id(conn: &mut DbConnection, id: &str) -> Result<usize> {
+    diesel::delete(faq_categories::dsl::faq_categories.find(id))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn update_slug_by_id(conn: &mut DbConnection, slug: &str, id: &str) -> Result<usize> {
     diesel::update(faq_categories::dsl::faq_categories.find(id))
         .set(faq_categories::slug.eq(slug))
@@ -54,6 +60,18 @@ pub fn decrement_display_order_by_range(
         faq_categories::dsl::faq_categories
             .filter(faq_categories::display_order.ge(from_display_order))
             .filter(faq_categories::display_order.le(to_display_order)),
+    )
+    .set(faq_categories::display_order.eq(faq_categories::display_order - 1))
+    .execute(conn)?)
+}
+
+pub fn decrement_display_order_by_from_display_order(
+    conn: &mut DbConnection,
+    from_display_order: u32,
+) -> Result<usize> {
+    Ok(diesel::update(
+        faq_categories::dsl::faq_categories
+            .filter(faq_categories::display_order.ge(from_display_order)),
     )
     .set(faq_categories::display_order.eq(faq_categories::display_order - 1))
     .execute(conn)?)

@@ -144,4 +144,18 @@ impl FaqRepository for FaqRepositoryImpl {
         category_with_contents.slug = slug;
         Ok(())
     }
+
+    fn delete_category_with_contents(
+        &self,
+        tx: &mut Self::Transaction,
+        category_with_contents: FaqCategoryWithContents,
+    ) -> Result<(), Self::Err> {
+        let deleted_display_order = category_with_contents.display_order;
+        database::adapters::faq_category::delete_by_id(tx, &category_with_contents.id)?;
+        database::adapters::faq_category::decrement_display_order_by_from_display_order(
+            tx,
+            deleted_display_order,
+        )?;
+        Ok(())
+    }
 }

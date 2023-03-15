@@ -41,7 +41,9 @@ pub fn router(state: AppState) -> Router {
         )
         .route(
             "/faq/categories/:id",
-            get(faq::category::get::handler).put(faq::category::update::handler),
+            get(faq::category::get::handler)
+                .put(faq::category::update::handler)
+                .delete(faq::category::delete::handler),
         )
         .route(
             "/general/faq_content_locales/",

@@ -51,4 +51,9 @@ pub trait FaqRepository: Send + Sync + 'static {
         slug: Slug,
         contents: Vec<FaqCategoryContent>,
     ) -> Result<(), Self::Err>;
+    fn delete_category_with_contents(
+        &self,
+        tx: &mut Self::Transaction,
+        category_with_contents: FaqCategoryWithContents,
+    ) -> Result<(), Self::Err>;
 }
