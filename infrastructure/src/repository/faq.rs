@@ -107,6 +107,15 @@ impl FaqRepository for FaqRepositoryImpl {
         })
     }
 
+    fn get_category_by_id(
+        &self,
+        tx: &mut Self::Transaction,
+        id: &FaqCategoryId,
+    ) -> Result<Option<FaqCategory>, Self::Err> {
+        let entity = database::adapters::faq_category::get_by_id(tx, &id)?;
+        Ok(entity.map(Into::into))
+    }
+
     fn get_category_with_contents_by_id(
         &self,
         tx: &mut Self::Transaction,
@@ -155,6 +164,50 @@ impl FaqRepository for FaqRepositoryImpl {
         database::adapters::faq_category::decrement_display_order_by_from_display_order(
             tx,
             deleted_display_order,
+        )?;
+        Ok(())
+    }
+
+    fn reorder_faq_category(
+        &self,
+        tx: &mut Self::Transaction,
+        objective: FaqCategory,
+        target: FaqCategory,
+        append: bool,
+    ) -> Result<(), Self::Err> {
+        if target.id == objective.id || target.display_order == objective.display_order {
+            return Ok(());
+        }
+        let pre_display_order = objective.display_order;
+        let next_display_order = if objective.display_order < target.display_order {
+            let next_display_order = if append {
+                target.display_order
+            } else {
+                target.display_order - 1
+            };
+            database::adapters::faq_category::decrement_display_order_by_range(
+                tx,
+                pre_display_order + 1,
+                next_display_order,
+            )?;
+            next_display_order
+        } else {
+            let next_display_order = if append {
+                target.display_order + 1
+            } else {
+                target.display_order
+            };
+            database::adapters::faq_category::increment_display_order_by_range(
+                tx,
+                next_display_order,
+                pre_display_order - 1,
+            )?;
+            next_display_order
+        };
+        database::adapters::faq_category::update_display_order_by_id(
+            tx,
+            next_display_order,
+            &objective.id,
         )?;
         Ok(())
     }

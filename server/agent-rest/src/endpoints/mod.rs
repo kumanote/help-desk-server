@@ -46,6 +46,10 @@ pub fn router(state: AppState) -> Router {
                 .delete(faq::category::delete::handler),
         )
         .route(
+            "/faq/categories/reorder",
+            post(faq::category::reorder::handler),
+        )
+        .route(
             "/general/faq_content_locales/",
             get(general::get_faq_content_locales::handler),
         )
