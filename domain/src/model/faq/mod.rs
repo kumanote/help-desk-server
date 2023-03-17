@@ -17,4 +17,4 @@ pub use faq_item_title::*;
 pub use faq_settings::*;
 
 pub type FaqContentLocale = crate::model::common::ContentLocale;
-pub type FaqItemBody = crate::model::common::RteContentState;
+pub type FaqItemBody = crate::model::common::RteEditorState;
