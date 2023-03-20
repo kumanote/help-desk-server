@@ -1,9 +1,9 @@
-use crate::model::{FaqItemBody, FaqItemId, FaqItemTitle, Locale};
+use crate::model::{FaqContentLocale, FaqItemBody, FaqItemId, FaqItemTitle};
 
 #[derive(Debug, Clone)]
 pub struct FaqItemContent {
     pub faq_item_id: FaqItemId,
-    pub locale: Locale,
+    pub locale: FaqContentLocale,
     pub title: FaqItemTitle,
     pub body: FaqItemBody,
 }
@@ -15,6 +15,17 @@ impl<'a> Into<database::entities::NewFaqItemContent<'a>> for &'a FaqItemContent 
             locale: &self.locale,
             title: &self.title,
             body: (&self.body).into(),
+        }
+    }
+}
+
+impl Into<search::entities::PublicFaqItem> for &FaqItemContent {
+    fn into(self) -> search::entities::PublicFaqItem {
+        search::entities::PublicFaqItem {
+            faq_item_id: self.faq_item_id.to_string(),
+            locale: self.locale.to_string(),
+            title: self.title.to_string(),
+            body: self.body.text(),
         }
     }
 }

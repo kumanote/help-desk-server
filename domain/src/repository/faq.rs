@@ -1,6 +1,6 @@
 use crate::model::{
-    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryWithContents, FaqSettings,
-    FaqSettingsData, PagingResult, Slug,
+    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryWithContents,
+    FaqItem, FaqItemContent, FaqSettings, FaqSettingsData, PagingResult, Slug,
 };
 
 pub trait FaqRepository: Send + Sync + 'static {
@@ -67,5 +67,26 @@ pub trait FaqRepository: Send + Sync + 'static {
         objective: FaqCategory,
         target: FaqCategory,
         append: bool,
+    ) -> Result<(), Self::Err>;
+    fn create_item(&self, tx: &mut Self::Transaction, item: &FaqItem) -> Result<(), Self::Err>;
+    fn get_item_by_slug(
+        &self,
+        tx: &mut Self::Transaction,
+        slug: &Slug,
+    ) -> Result<Option<FaqItem>, Self::Err>;
+    fn create_item_content(
+        &self,
+        tx: &mut Self::Transaction,
+        item_content: &FaqItemContent,
+    ) -> Result<(), Self::Err>;
+    fn next_category_item_display_order(
+        &self,
+        tx: &mut Self::Transaction,
+        faq_category_id: &FaqCategoryId,
+    ) -> Result<u32, Self::Err>;
+    fn create_category_item(
+        &self,
+        tx: &mut Self::Transaction,
+        category_item: &FaqCategoryItem,
     ) -> Result<(), Self::Err>;
 }

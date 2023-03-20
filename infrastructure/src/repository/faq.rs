@@ -1,7 +1,7 @@
 use database::DbConnection;
 use domain::model::{
-    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryWithContents, FaqSettings,
-    FaqSettingsData, PagingResult, Slug,
+    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryWithContents,
+    FaqItem, FaqItemContent, FaqSettings, FaqSettingsData, PagingResult, Slug,
 };
 use domain::repository::FaqRepository;
 
@@ -209,6 +209,52 @@ impl FaqRepository for FaqRepositoryImpl {
             next_display_order,
             &objective.id,
         )?;
+        Ok(())
+    }
+
+    fn create_item(&self, tx: &mut Self::Transaction, item: &FaqItem) -> Result<(), Self::Err> {
+        database::adapters::faq_item::create(tx, item.into())?;
+        Ok(())
+    }
+
+    fn get_item_by_slug(
+        &self,
+        tx: &mut Self::Transaction,
+        slug: &Slug,
+    ) -> Result<Option<FaqItem>, Self::Err> {
+        let entity = database::adapters::faq_item::get_by_slug(tx, &slug)?;
+        Ok(entity.map(Into::into))
+    }
+
+    fn create_item_content(
+        &self,
+        tx: &mut Self::Transaction,
+        item_content: &FaqItemContent,
+    ) -> Result<(), Self::Err> {
+        database::adapters::faq_item_content::create(tx, item_content.into())?;
+        Ok(())
+    }
+
+    fn next_category_item_display_order(
+        &self,
+        tx: &mut Self::Transaction,
+        faq_category_id: &FaqCategoryId,
+    ) -> Result<u32, Self::Err> {
+        let current_max =
+            database::adapters::faq_category_item::get_max_display_order_by_faq_category_id(
+                tx,
+                &faq_category_id,
+            )?
+            .unwrap_or(0);
+        Ok(current_max + 1)
+    }
+
+    fn create_category_item(
+        &self,
+        tx: &mut Self::Transaction,
+        category_item: &FaqCategoryItem,
+    ) -> Result<(), Self::Err> {
+        database::adapters::faq_category_item::create(tx, category_item.into())?;
         Ok(())
     }
 }

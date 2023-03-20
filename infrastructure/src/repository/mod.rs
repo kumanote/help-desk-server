@@ -5,8 +5,10 @@ mod file;
 mod group;
 mod role;
 mod role_for_group;
+mod search;
 mod workspace;
 
+pub use self::search::*;
 pub use agent::*;
 pub use agent_login::*;
 pub use faq::*;

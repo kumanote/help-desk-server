@@ -714,6 +714,7 @@ dependencies = [
  "pbkdf2",
  "queue",
  "regex",
+ "search",
  "serde",
  "serde_json",
  "serial_test",
@@ -1082,6 +1083,7 @@ dependencies = [
  "clap",
  "dotenv",
  "futures",
+ "job-config",
  "serde",
  "serde_json",
  "thiserror",
@@ -1270,12 +1272,15 @@ dependencies = [
 name = "infrastructure"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "cache",
  "chrono",
  "database",
  "domain",
  "dotenv",
+ "futures",
  "queue",
+ "search",
  "serial_test",
 ]
 
@@ -1374,6 +1379,38 @@ name = "itoa"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fad582f4b9e86b6caa621cabeb0963332d92eea04729ab12892c2533951e6440"
+
+[[package]]
+name = "job"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "cache",
+ "chrono",
+ "database",
+ "domain",
+ "dotenv",
+ "futures",
+ "infrastructure",
+ "job-config",
+ "once_cell",
+ "queue",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
+name = "job-config"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "toml",
+]
 
 [[package]]
 name = "js-sys"

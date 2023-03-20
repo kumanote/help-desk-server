@@ -4,7 +4,9 @@ resolver = "2"
 members = [
     "cmd",
     "config/agent-rest",
+    "config/job",
     "server/agent-rest",
+    "job",
     "infrastructure",
     "domain",
     "data/cache",
@@ -27,6 +29,7 @@ rust-version = "1.67.0"
 # Please do not add any test features here: they should be declared by the individual crate.
 agent-rest-config = { path = "config/agent-rest" }
 agent-rest-server = { path = "server/agent-rest" }
+job-config = { path = "config/job" }
 infrastructure = { path = "infrastructure" }
 domain = { path = "domain" }
 cache = { path = "data/cache" }

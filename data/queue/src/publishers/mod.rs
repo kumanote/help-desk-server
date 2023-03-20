@@ -1,4 +1,5 @@
 pub mod emails;
+pub mod search;
 
 use crate::{NatsSubject, QueueAsyncConnection, QueueConnection, Result};
 
