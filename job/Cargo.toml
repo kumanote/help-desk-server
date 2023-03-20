@@ -1,0 +1,33 @@
+[package]
+name = "job"
+version = "0.1.0"
+# Workspace inherited keys
+authors = { workspace = true }
+edition = { workspace = true }
+homepage = { workspace = true }
+license = { workspace = true }
+publish = { workspace = true }
+repository = { workspace = true }
+rust-version = { workspace = true }
+
+[dependencies]
+# workspace members
+job-config = { workspace = true }
+infrastructure = { workspace = true }
+domain = { workspace = true }
+cache = { workspace = true }
+database = { workspace = true }
+queue = { workspace = true }
+
+# external libraries
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+futures = { workspace = true }
+tokio = { workspace = true }
+once_cell = { workspace = true }
+
+[dev-dependencies]
+dotenv = "0.15.0"

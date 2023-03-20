@@ -6,6 +6,7 @@ members = [
     "config/agent-rest",
     "config/job",
     "server/agent-rest",
+    "job",
     "infrastructure",
     "domain",
     "data/cache",
