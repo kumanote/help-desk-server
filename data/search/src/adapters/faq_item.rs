@@ -1,4 +1,4 @@
-use crate::entities::{FaqItem, SearchResults, TaskInfo};
+use crate::entities::{FaqItem, SearchResults, Task};
 use crate::{Result, SearchClient};
 use meilisearch_sdk::search::SearchQuery;
 
@@ -6,10 +6,12 @@ use meilisearch_sdk::search::SearchQuery;
 const PRIMARY_KEY: &'static str = "id";
 const INDEX_NAME: &'static str = "faq_items";
 
-pub async fn add_or_replace(client: &SearchClient, entity: FaqItem) -> Result<TaskInfo> {
+pub async fn add_or_replace(client: &SearchClient, entity: FaqItem) -> Result<Task> {
     client
         .index(INDEX_NAME)
         .add_or_replace(&[entity], Some(PRIMARY_KEY))
+        .await?
+        .wait_for_completion(client, None, None)
         .await
         .map_err(Into::into)
 }
@@ -33,10 +35,12 @@ pub async fn search(
         .map_err(Into::into)
 }
 
-pub async fn delete_by_id(client: &SearchClient, id: &str) -> Result<TaskInfo> {
+pub async fn delete_by_id(client: &SearchClient, id: &str) -> Result<Task> {
     client
         .index(INDEX_NAME)
         .delete_document(id)
+        .await?
+        .wait_for_completion(client, None, None)
         .await
         .map_err(Into::into)
 }

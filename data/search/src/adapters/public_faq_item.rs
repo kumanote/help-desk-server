@@ -1,15 +1,17 @@
-use crate::entities::{PublicFaqItem, SearchResults, TaskInfo};
+use crate::entities::{PublicFaqItem, SearchResults, Task};
 use crate::{Result, SearchClient};
 use meilisearch_sdk::search::SearchQuery;
 
 /// primary key for localized public_faq_item index
 const PRIMARY_KEY: &'static str = "faq_item_id";
 
-pub async fn add_or_replace(client: &SearchClient, entity: PublicFaqItem) -> Result<TaskInfo> {
+pub async fn add_or_replace(client: &SearchClient, entity: PublicFaqItem) -> Result<Task> {
     let index = build_index_name(&entity.locale);
     client
         .index(index)
         .add_or_replace(&[entity], Some(PRIMARY_KEY))
+        .await?
+        .wait_for_completion(client, None, None)
         .await
         .map_err(Into::into)
 }
@@ -39,11 +41,13 @@ pub async fn delete_by_faq_item_id_and_locale(
     client: &SearchClient,
     faq_item_id: &str,
     locale: &str,
-) -> Result<TaskInfo> {
+) -> Result<Task> {
     let index = build_index_name(&locale);
     client
         .index(index)
         .delete_document(faq_item_id)
+        .await?
+        .wait_for_completion(client, None, None)
         .await
         .map_err(Into::into)
 }

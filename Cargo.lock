@@ -714,6 +714,7 @@ dependencies = [
  "pbkdf2",
  "queue",
  "regex",
+ "search",
  "serde",
  "serde_json",
  "serial_test",
@@ -1270,12 +1271,15 @@ dependencies = [
 name = "infrastructure"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "cache",
  "chrono",
  "database",
  "domain",
  "dotenv",
+ "futures",
  "queue",
+ "search",
  "serial_test",
 ]
 

@@ -8,6 +8,7 @@ mod role_for_group;
 mod search;
 mod workspace;
 
+pub use self::search::*;
 pub use agent::*;
 pub use agent_login::*;
 pub use faq::*;
@@ -15,5 +16,4 @@ pub use file::*;
 pub use group::*;
 pub use role::*;
 pub use role_for_group::*;
-pub use search::*;
 pub use workspace::*;

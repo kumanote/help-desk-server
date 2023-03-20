@@ -45,6 +45,33 @@ pub struct FaqItemWithContentsAndCategories {
     pub categories: Vec<FaqCategoryItemWithCategory>,
 }
 
+impl Into<search::entities::FaqItem> for &FaqItemWithContentsAndCategories {
+    fn into(self) -> search::entities::FaqItem {
+        let mut categories = vec![];
+        for category_with_contents in &self.categories {
+            for content in &category_with_contents.category.contents {
+                categories.push(search::entities::FaqItemCategory {
+                    locale: content.locale.to_string(),
+                    title: content.title.to_string(),
+                })
+            }
+        }
+        search::entities::FaqItem {
+            id: self.id.to_string(),
+            contents: self
+                .contents
+                .iter()
+                .map(|content| search::entities::FaqItemContent {
+                    locale: content.locale.to_string(),
+                    title: content.title.to_string(),
+                    body: content.body.text(),
+                })
+                .collect(),
+            categories,
+        }
+    }
+}
+
 impl
     From<(
         FaqItem,

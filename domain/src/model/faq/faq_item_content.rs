@@ -19,6 +19,17 @@ impl<'a> Into<database::entities::NewFaqItemContent<'a>> for &'a FaqItemContent 
     }
 }
 
+impl Into<search::entities::PublicFaqItem> for &FaqItemContent {
+    fn into(self) -> search::entities::PublicFaqItem {
+        search::entities::PublicFaqItem {
+            faq_item_id: self.faq_item_id.to_string(),
+            locale: self.locale.to_string(),
+            title: self.title.to_string(),
+            body: self.body.text(),
+        }
+    }
+}
+
 impl From<database::entities::FaqItemContent> for FaqItemContent {
     fn from(value: database::entities::FaqItemContent) -> Self {
         Self {

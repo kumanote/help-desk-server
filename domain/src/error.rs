@@ -86,3 +86,11 @@ impl From<queue::Error> for Error {
         }
     }
 }
+
+impl From<search::Error> for Error {
+    fn from(cause: search::Error) -> Self {
+        Self::SystemError {
+            cause: cause.into(),
+        }
+    }
+}
