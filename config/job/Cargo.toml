@@ -1,5 +1,5 @@
 [package]
-name = "help-desk-server"
+name = "job-config"
 version = "0.1.0"
 # Workspace inherited keys
 authors = { workspace = true }
@@ -11,20 +11,10 @@ repository = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
-# workspace members
-agent-rest-config = { workspace = true }
-agent-rest-server = { workspace = true }
-job-config = { workspace = true }
-
-# external libraries
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-dotenv = { workspace = true }
-chrono = { workspace = true }
-futures = { workspace = true }
-tokio = { workspace = true }
-clap = { workspace = true }
+toml = { workspace = true }
 
 [dev-dependencies]
