@@ -1,9 +1,18 @@
 use super::RteRootNode;
+use crate::{Error, Result};
 use serde::{Deserialize, Serialize};
+use std::str::FromStr;
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct RteEditorState {
     pub root: RteRootNode,
+}
+
+impl RteEditorState {
+    pub fn text(&self) -> String {
+        // visit every children & concat text strings
+        todo!()
+    }
 }
 
 impl From<serde_json::Value> for RteEditorState {
@@ -21,6 +30,18 @@ impl Into<serde_json::Value> for RteEditorState {
 impl Into<serde_json::Value> for &RteEditorState {
     fn into(self) -> serde_json::Value {
         serde_json::to_value(self).unwrap()
+    }
+}
+
+impl FromStr for RteEditorState {
+    type Err = Error;
+    fn from_str(s: &str) -> Result<Self> {
+        match serde_json::from_str(s) {
+            Ok(parsed) => Ok(parsed),
+            Err(cause) => Err(Error::UnsupportedRteValue {
+                value: format!("{:?}", cause),
+            }),
+        }
     }
 }
 

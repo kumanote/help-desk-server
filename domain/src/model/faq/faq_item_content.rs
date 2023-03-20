@@ -1,9 +1,9 @@
-use crate::model::{FaqItemBody, FaqItemId, FaqItemTitle, Locale};
+use crate::model::{FaqContentLocale, FaqItemBody, FaqItemId, FaqItemTitle};
 
 #[derive(Debug, Clone)]
 pub struct FaqItemContent {
     pub faq_item_id: FaqItemId,
-    pub locale: Locale,
+    pub locale: FaqContentLocale,
     pub title: FaqItemTitle,
     pub body: FaqItemBody,
 }

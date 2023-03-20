@@ -1,6 +1,7 @@
 mod names;
 
 pub mod emails;
+pub mod search;
 
 use crate::{NatsSubject, QueueConnection, Result};
 use names::ConsumerName;

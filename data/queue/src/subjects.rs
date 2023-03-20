@@ -1,11 +1,14 @@
 use std::fmt;
 
 const EMAILS: &'static str = "emails";
+const SEARCH: &'static str = "search";
 
 #[derive(Debug, Clone)]
 pub enum NatsSubject {
     /// Background email task.
     Emails,
+    /// Background search engine update task.
+    Search,
 }
 
 impl fmt::Display for NatsSubject {
@@ -13,6 +16,9 @@ impl fmt::Display for NatsSubject {
         match self {
             Self::Emails => {
                 write!(f, "{}", EMAILS)
+            },
+            Self::Search => {
+                write!(f, "{}", SEARCH)
             },
         }
     }

@@ -48,6 +48,19 @@ pub fn get_by_id(conn: &mut DbConnection, id: &str) -> Result<Option<FaqItem>> {
     }
 }
 
+pub fn get_by_slug(conn: &mut DbConnection, slug: &str) -> Result<Option<FaqItem>> {
+    let result = faq_items::table
+        .filter(faq_items::slug.eq(slug))
+        .first::<FaqItem>(conn);
+    match result {
+        Ok(entity) => Ok(Some(entity)),
+        Err(err) => match err {
+            Error::NotFound => Ok(None),
+            _ => Err(err.into()),
+        },
+    }
+}
+
 pub fn get_list_by_ids(conn: &mut DbConnection, ids: &Vec<&str>) -> Result<Vec<FaqItem>> {
     faq_items::table
         .filter(faq_items::id.eq_any(ids))

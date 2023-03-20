@@ -1,4 +1,4 @@
-use crate::model::{FaqItemId, Slug};
+use crate::model::{FaqCategoryItemWithCategory, FaqItemContent, FaqItemId, Slug};
 use chrono::NaiveDateTime;
 
 #[derive(Debug, Clone)]
@@ -30,6 +30,43 @@ impl From<database::entities::FaqItem> for FaqItem {
             is_published: value.is_published,
             published_at: value.published_at,
             last_updated_at: value.last_updated_at,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct FaqItemWithContentsAndCategories {
+    pub id: FaqItemId,
+    pub slug: Slug,
+    pub is_published: bool,
+    pub published_at: Option<NaiveDateTime>,
+    pub last_updated_at: Option<NaiveDateTime>,
+    pub contents: Vec<FaqItemContent>,
+    pub categories: Vec<FaqCategoryItemWithCategory>,
+}
+
+impl
+    From<(
+        FaqItem,
+        Vec<FaqItemContent>,
+        Vec<FaqCategoryItemWithCategory>,
+    )> for FaqItemWithContentsAndCategories
+{
+    fn from(
+        (item, contents, categories): (
+            FaqItem,
+            Vec<FaqItemContent>,
+            Vec<FaqCategoryItemWithCategory>,
+        ),
+    ) -> Self {
+        Self {
+            id: item.id,
+            slug: item.slug,
+            is_published: item.is_published,
+            published_at: item.published_at,
+            last_updated_at: item.last_updated_at,
+            contents,
+            categories,
         }
     }
 }

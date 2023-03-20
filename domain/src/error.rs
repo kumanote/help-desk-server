@@ -63,6 +63,14 @@ impl From<cache::Error> for Error {
     }
 }
 
+impl From<cache::R2D2Error> for Error {
+    fn from(cause: cache::R2D2Error) -> Self {
+        Self::SystemError {
+            cause: anyhow!(cause),
+        }
+    }
+}
+
 impl From<database::Error> for Error {
     fn from(cause: database::Error) -> Self {
         Self::SystemError {
@@ -71,10 +79,10 @@ impl From<database::Error> for Error {
     }
 }
 
-impl From<cache::R2D2Error> for Error {
-    fn from(cause: cache::R2D2Error) -> Self {
+impl From<queue::Error> for Error {
+    fn from(cause: queue::Error) -> Self {
         Self::SystemError {
-            cause: anyhow!(cause),
+            cause: cause.into(),
         }
     }
 }
