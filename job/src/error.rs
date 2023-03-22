@@ -45,3 +45,11 @@ impl From<queue::Error> for Error {
         Self::QueueConnectionPoolError { cause }
     }
 }
+
+impl From<domain::Error> for Error {
+    fn from(cause: domain::Error) -> Self {
+        Self::SystemError {
+            cause: cause.into(),
+        }
+    }
+}

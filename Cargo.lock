@@ -377,6 +377,7 @@ dependencies = [
  "js-sys",
  "num-integer",
  "num-traits",
+ "serde",
  "time 0.1.45",
  "wasm-bindgen",
  "winapi",
@@ -1395,6 +1396,7 @@ dependencies = [
  "job-config",
  "once_cell",
  "queue",
+ "search",
  "serde",
  "serde_json",
  "thiserror",
@@ -2129,6 +2131,7 @@ name = "queue"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "chrono",
  "dotenv",
  "nats",
  "r2d2",

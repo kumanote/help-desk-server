@@ -45,3 +45,25 @@ impl From<(FaqCategoryItem, FaqCategoryWithContents)> for FaqCategoryItemWithCat
         }
     }
 }
+
+impl Into<queue::entities::FaqCategoryItemWithCategory> for FaqCategoryItemWithCategory {
+    fn into(self) -> queue::entities::FaqCategoryItemWithCategory {
+        queue::entities::FaqCategoryItemWithCategory {
+            faq_category_id: self.faq_category_id.into(),
+            faq_item_id: self.faq_item_id.to_string(),
+            display_order: self.display_order,
+            category: self.category.into(),
+        }
+    }
+}
+
+impl From<queue::entities::FaqCategoryItemWithCategory> for FaqCategoryItemWithCategory {
+    fn from(value: queue::entities::FaqCategoryItemWithCategory) -> Self {
+        Self {
+            faq_category_id: value.faq_category_id.into(),
+            faq_item_id: value.faq_item_id.into(),
+            display_order: value.display_order,
+            category: value.category.into(),
+        }
+    }
+}

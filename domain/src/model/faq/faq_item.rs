@@ -45,6 +45,34 @@ pub struct FaqItemWithContentsAndCategories {
     pub categories: Vec<FaqCategoryItemWithCategory>,
 }
 
+impl Into<queue::entities::FaqItemWithContentsAndCategories> for FaqItemWithContentsAndCategories {
+    fn into(self) -> queue::entities::FaqItemWithContentsAndCategories {
+        queue::entities::FaqItemWithContentsAndCategories {
+            id: self.id.into(),
+            slug: self.slug.into(),
+            is_published: self.is_published,
+            published_at: self.published_at,
+            last_updated_at: self.last_updated_at,
+            contents: self.contents.into_iter().map(Into::into).collect(),
+            categories: self.categories.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<queue::entities::FaqItemWithContentsAndCategories> for FaqItemWithContentsAndCategories {
+    fn from(value: queue::entities::FaqItemWithContentsAndCategories) -> Self {
+        Self {
+            id: value.id.into(),
+            slug: value.slug.into(),
+            is_published: value.is_published,
+            published_at: value.published_at,
+            last_updated_at: value.last_updated_at,
+            contents: value.contents.into_iter().map(Into::into).collect(),
+            categories: value.categories.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
 impl Into<search::entities::FaqItem> for &FaqItemWithContentsAndCategories {
     fn into(self) -> search::entities::FaqItem {
         let mut categories = vec![];

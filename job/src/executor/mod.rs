@@ -1,6 +1,6 @@
 mod search;
 
-pub use search::*;
+pub use self::search::*;
 
 use crate::{config, Result};
 use job_config::AppConfig;

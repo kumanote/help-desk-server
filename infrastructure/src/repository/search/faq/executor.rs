@@ -34,10 +34,7 @@ impl FaqSearchRepository for FaqSearchRepositoryExecutor {
         }
     }
 
-    fn delete_faq_item(
-        &self,
-        faq_item: &FaqItemWithContentsAndCategories,
-    ) -> Result<(), Self::Err> {
+    fn delete_faq_item(&self, faq_item: FaqItemWithContentsAndCategories) -> Result<(), Self::Err> {
         match executor::block_on(search::adapters::faq_item::delete_by_id(
             &self.search_client,
             &faq_item.id,
