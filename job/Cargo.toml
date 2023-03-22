@@ -18,6 +18,7 @@ domain = { workspace = true }
 cache = { workspace = true }
 database = { workspace = true }
 queue = { workspace = true }
+search = { workspace = true }
 
 # external libraries
 anyhow = { workspace = true }

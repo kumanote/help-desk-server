@@ -40,3 +40,25 @@ impl From<database::entities::FaqItemContent> for FaqItemContent {
         }
     }
 }
+
+impl Into<queue::entities::FaqItemContent> for FaqItemContent {
+    fn into(self) -> queue::entities::FaqItemContent {
+        queue::entities::FaqItemContent {
+            faq_item_id: self.faq_item_id.to_string(),
+            locale: self.locale.to_string(),
+            title: self.title.to_string(),
+            body: self.body.into(),
+        }
+    }
+}
+
+impl From<queue::entities::FaqItemContent> for FaqItemContent {
+    fn from(value: queue::entities::FaqItemContent) -> Self {
+        Self {
+            faq_item_id: value.faq_item_id.into(),
+            locale: value.locale.into(),
+            title: value.title.into(),
+            body: value.body.into(),
+        }
+    }
+}

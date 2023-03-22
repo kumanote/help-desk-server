@@ -31,7 +31,7 @@ impl PublicFaqSearchRepository for PublicFaqSearchRepositoryExecutor {
         }
     }
 
-    fn delete_faq_item_content(&self, faq_item_content: &FaqItemContent) -> Result<(), Self::Err> {
+    fn delete_faq_item_content(&self, faq_item_content: FaqItemContent) -> Result<(), Self::Err> {
         match executor::block_on(
             search::adapters::public_faq_item::delete_by_faq_item_id_and_locale(
                 &self.search_client,

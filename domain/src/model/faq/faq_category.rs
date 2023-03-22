@@ -45,3 +45,25 @@ impl From<(FaqCategory, Vec<FaqCategoryContent>)> for FaqCategoryWithContents {
         }
     }
 }
+
+impl Into<queue::entities::FaqCategoryWithContents> for FaqCategoryWithContents {
+    fn into(self) -> queue::entities::FaqCategoryWithContents {
+        queue::entities::FaqCategoryWithContents {
+            id: self.id.into(),
+            slug: self.slug.into(),
+            display_order: self.display_order,
+            contents: self.contents.into_iter().map(Into::into).collect(),
+        }
+    }
+}
+
+impl From<queue::entities::FaqCategoryWithContents> for FaqCategoryWithContents {
+    fn from(value: queue::entities::FaqCategoryWithContents) -> Self {
+        Self {
+            id: value.id.into(),
+            slug: value.slug.into(),
+            display_order: value.display_order,
+            contents: value.contents.into_iter().map(Into::into).collect(),
+        }
+    }
+}
