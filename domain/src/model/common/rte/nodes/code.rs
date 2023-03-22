@@ -1,6 +1,6 @@
 use super::{
     RteChildNode, RteDirection, RteElementFormatType, RteIndent, RteTextDetailType,
-    RteTextFormatType, RteTextModeType, RteVersion,
+    RteTextFormatType, RteTextModeType, RteTextsHolder, RteVersion,
 };
 use serde::{Deserialize, Serialize};
 
@@ -16,6 +16,16 @@ pub struct RteCodeNode {
     pub language: Option<String>,
 }
 
+impl RteTextsHolder for RteCodeNode {
+    fn texts(&self) -> Vec<&str> {
+        let mut results = vec![];
+        for child in &self.children {
+            results.extend(child.texts());
+        }
+        results
+    }
+}
+
 /// @see https://github.com/facebook/lexical/blob/v0.9.1-next.0/packages/lexical-code/src/CodeHighlightNode.ts#L49
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct RteCodeHighlightNode {
@@ -27,4 +37,10 @@ pub struct RteCodeHighlightNode {
     pub style: String,
     pub text: String,
     pub version: RteVersion,
+}
+
+impl RteTextsHolder for RteCodeHighlightNode {
+    fn texts(&self) -> Vec<&str> {
+        vec![&self.text]
+    }
 }

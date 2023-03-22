@@ -1,7 +1,10 @@
 use super::RteRootNode;
+use super::RteTextsHolder;
 use crate::{Error, Result};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
+
+const TEXT_RETURN: &'static str = "\n";
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct RteEditorState {
@@ -10,8 +13,8 @@ pub struct RteEditorState {
 
 impl RteEditorState {
     pub fn text(&self) -> String {
-        // visit every children & concat text strings
-        todo!()
+        let texts = self.root.texts();
+        texts.join(TEXT_RETURN)
     }
 }
 
@@ -114,6 +117,7 @@ mod tests {
 }"#;
         let json_value: serde_json::Value = serde_json::from_str(serialized).unwrap();
         let deserialized: RteEditorState = serde_json::from_str(serialized).unwrap();
+        assert_eq!("aaa\na", deserialized.text());
         let re_serialized: serde_json::Value = deserialized.into();
         assert_eq!(json_value, re_serialized);
     }
