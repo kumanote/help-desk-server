@@ -1,7 +1,7 @@
 mod mode_type;
 pub use mode_type::*;
 
-use super::RteVersion;
+use super::{RteTextsHolder, RteVersion};
 use serde::{Deserialize, Serialize};
 
 pub type RteTextDetailType = u32;
@@ -16,4 +16,10 @@ pub struct RteTextNode {
     pub style: String,
     pub text: String,
     pub version: RteVersion,
+}
+
+impl RteTextsHolder for RteTextNode {
+    fn texts(&self) -> Vec<&str> {
+        vec![&self.text]
+    }
 }

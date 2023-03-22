@@ -34,6 +34,16 @@ pub struct RteRootNode {
     pub version: RteVersion,
 }
 
+impl RteTextsHolder for RteRootNode {
+    fn texts(&self) -> Vec<&str> {
+        let mut results = vec![];
+        for child in &self.children {
+            results.extend(child.texts());
+        }
+        results
+    }
+}
+
 /// The Lexical ElementNode Definitions
 /// * paragraph
 /// * heading
@@ -73,6 +83,24 @@ pub enum RteChildNode {
     Linebreak(RteLinebreakNode),
 }
 
+impl RteTextsHolder for RteChildNode {
+    fn texts(&self) -> Vec<&str> {
+        match self {
+            Self::Paragraph(node) => node.texts(),
+            Self::Heading(node) => node.texts(),
+            Self::List(node) => node.texts(),
+            Self::ListItem(node) => node.texts(),
+            Self::Quote(node) => node.texts(),
+            Self::Image(node) => node.texts(),
+            Self::Code(node) => node.texts(),
+            Self::CodeHighlight(node) => node.texts(),
+            Self::Link(node) => node.texts(),
+            Self::Text(node) => node.texts(),
+            Self::Linebreak(node) => node.texts(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
 pub struct RteElementNode {
     pub children: Vec<RteChildNode>,
@@ -80,4 +108,18 @@ pub struct RteElementNode {
     pub format: RteElementFormatType,
     pub indent: RteIndent,
     pub version: RteVersion,
+}
+
+impl RteTextsHolder for RteElementNode {
+    fn texts(&self) -> Vec<&str> {
+        let mut results = vec![];
+        for child in &self.children {
+            results.extend(child.texts());
+        }
+        results
+    }
+}
+
+pub trait RteTextsHolder {
+    fn texts(&self) -> Vec<&str>;
 }

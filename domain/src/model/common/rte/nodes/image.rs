@@ -1,4 +1,4 @@
-use super::RteVersion;
+use super::{RteTextsHolder, RteVersion};
 use serde::{Deserialize, Serialize};
 
 pub type RteImageSize = u32;
@@ -16,4 +16,10 @@ pub struct RteImageNode {
     #[serde(rename = "maxWidth", skip_serializing_if = "Option::is_none")]
     pub max_width: Option<RteImageSize>,
     pub version: RteVersion,
+}
+
+impl RteTextsHolder for RteImageNode {
+    fn texts(&self) -> Vec<&str> {
+        vec![]
+    }
 }
