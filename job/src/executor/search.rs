@@ -19,6 +19,7 @@ impl SearchJobExecutor {
     }
 
     pub(crate) async fn start(self) -> Result<()> {
+        println!("start watching search engine back ground tasks...");
         let mut sigint = signal(SignalKind::interrupt())?;
         let mut sigterm = signal(SignalKind::terminate())?;
         let app_config = config::app_config();

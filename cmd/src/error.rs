@@ -8,6 +8,8 @@ pub enum Error {
     AgentRestApiServerError {
         cause: agent_rest_server::ServerError,
     },
+    #[error("JobExecutionError: {cause}")]
+    JobExecutionError { cause: job::Error },
 }
 
 impl From<agent_rest_config::Error> for Error {
@@ -29,5 +31,11 @@ impl From<job_config::Error> for Error {
 impl From<agent_rest_server::ServerError> for Error {
     fn from(cause: agent_rest_server::ServerError) -> Self {
         Self::AgentRestApiServerError { cause }
+    }
+}
+
+impl From<job::Error> for Error {
+    fn from(cause: job::Error) -> Self {
+        Self::JobExecutionError { cause }
     }
 }

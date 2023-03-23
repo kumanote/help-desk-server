@@ -15,6 +15,7 @@ rust-version = { workspace = true }
 agent-rest-config = { workspace = true }
 agent-rest-server = { workspace = true }
 job-config = { workspace = true }
+job = { workspace = true }
 
 # external libraries
 anyhow = { workspace = true }

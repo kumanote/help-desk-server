@@ -1,5 +1,6 @@
 use crate::Result;
 use clap::Args;
+use job::JobExecutor;
 use std::path::PathBuf;
 
 #[derive(Args)]
@@ -65,8 +66,8 @@ impl SearchJobArgs {
         let config_file_path = self.config.clone();
         let config_args: job_config::AppArgs = self.into();
         let app_config = job_config::AppConfig::build(config_file_path, config_args)?;
-        // TODO
-        println!("{:?}", app_config);
-        Ok(())
+        // println!("{:?}", app_config);
+        let executor = JobExecutor::new_search();
+        executor.start(app_config).await.map_err(Into::into)
     }
 }

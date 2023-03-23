@@ -27,6 +27,16 @@ impl From<database::entities::FaqCategory> for FaqCategory {
     }
 }
 
+impl From<&database::entities::FaqCategory> for FaqCategory {
+    fn from(value: &database::entities::FaqCategory) -> Self {
+        Self {
+            id: value.id.clone().into(),
+            slug: value.slug.clone().into(),
+            display_order: value.display_order,
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct FaqCategoryWithContents {
     pub id: FaqCategoryId,

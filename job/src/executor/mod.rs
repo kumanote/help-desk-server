@@ -10,6 +10,10 @@ pub enum JobExecutor {
 }
 
 impl JobExecutor {
+    pub fn new_search() -> Self {
+        Self::Search(SearchJobExecutor::new())
+    }
+
     pub async fn start(self, app_config: AppConfig) -> Result<()> {
         // set global app config
         config::set_app_config(app_config);

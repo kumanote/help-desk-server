@@ -28,7 +28,7 @@ fn test_build_app_config() {
             max_connection_pool_size: 2,
         },
         search: SearchConfig {
-            meilisearch_host: "127.0.0.1".to_owned(),
+            meilisearch_host: "http://localhost:7700".to_owned(),
             meilisearch_api_key: "01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff"
                 .to_owned(),
         },

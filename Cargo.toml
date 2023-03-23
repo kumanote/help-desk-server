@@ -30,6 +30,7 @@ rust-version = "1.67.0"
 agent-rest-config = { path = "config/agent-rest" }
 agent-rest-server = { path = "server/agent-rest" }
 job-config = { path = "config/job" }
+job = { path = "job" }
 infrastructure = { path = "infrastructure" }
 domain = { path = "domain" }
 cache = { path = "data/cache" }

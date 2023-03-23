@@ -57,6 +57,20 @@ pub fn decrement_display_order_by_faq_category_id_and_range(
     .execute(conn)?)
 }
 
+pub fn decrement_display_order_by_faq_category_id_and_from_display_order(
+    conn: &mut DbConnection,
+    from_display_order: u32,
+    faq_category_id: &str,
+) -> Result<usize> {
+    Ok(diesel::update(
+        faq_category_items::dsl::faq_category_items
+            .filter(faq_category_items::faq_category_id.ge(faq_category_id))
+            .filter(faq_category_items::display_order.ge(from_display_order)),
+    )
+    .set(faq_category_items::display_order.eq(faq_category_items::display_order - 1))
+    .execute(conn)?)
+}
+
 pub fn get_by_id(
     conn: &mut DbConnection,
     faq_category_id: &str,
@@ -82,4 +96,14 @@ pub fn get_max_display_order_by_faq_category_id(
         .filter(faq_category_items::faq_category_id.ge(faq_category_id))
         .select(max(faq_category_items::display_order))
         .first(conn)?)
+}
+
+pub fn get_list_by_faq_item_id(
+    conn: &mut DbConnection,
+    faq_item_id: &str,
+) -> Result<Vec<FaqCategoryItem>> {
+    faq_category_items::table
+        .filter(faq_category_items::faq_item_id.eq(faq_item_id))
+        .load::<FaqCategoryItem>(conn)
+        .map_err(Into::into)
 }

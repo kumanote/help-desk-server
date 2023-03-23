@@ -13,6 +13,12 @@ pub fn create(conn: &mut DbConnection, entity: NewFaqItem) -> Result<usize> {
         .map_err(Into::into)
 }
 
+pub fn delete_by_id(conn: &mut DbConnection, id: &str) -> Result<usize> {
+    diesel::delete(faq_items::dsl::faq_items.find(id))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn update_slug_by_id(conn: &mut DbConnection, slug: &str, id: &str) -> Result<usize> {
     diesel::update(faq_items::dsl::faq_items.find(id))
         .set(faq_items::slug.eq(slug))
