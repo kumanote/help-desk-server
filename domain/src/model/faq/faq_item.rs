@@ -125,3 +125,5 @@ impl
         }
     }
 }
+
+pub type SearchedFaqItem = search::entities::FaqItem;

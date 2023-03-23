@@ -48,6 +48,12 @@ impl FromStr for RteEditorState {
     }
 }
 
+impl Into<String> for RteEditorState {
+    fn into(self) -> String {
+        serde_json::to_string(&self).unwrap()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

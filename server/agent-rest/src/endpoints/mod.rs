@@ -50,6 +50,14 @@ pub fn router(state: AppState) -> Router {
             post(faq::category::reorder::handler),
         )
         .route(
+            "/faq/items/",
+            get(faq::item::search::handler).post(faq::item::create::handler),
+        )
+        .route(
+            "/faq/items/:id",
+            get(faq::item::get::handler).delete(faq::item::delete::handler),
+        )
+        .route(
             "/general/faq_content_locales/",
             get(general::get_faq_content_locales::handler),
         )

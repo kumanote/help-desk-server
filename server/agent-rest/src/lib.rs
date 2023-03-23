@@ -18,6 +18,7 @@ use axum::http::{
 use cache::CacheConnectionPool;
 use database::DbConnectionPool;
 use queue::QueueConnectionPool;
+use search::SearchClient;
 use std::net::SocketAddr;
 use tokio::signal;
 use tower_http::cors::CorsLayer;
@@ -27,6 +28,7 @@ pub struct AppState {
     pub db_connection_pool: DbConnectionPool,
     pub cache_connection_pool: CacheConnectionPool,
     pub queue_connection_pool: QueueConnectionPool,
+    pub search_client: SearchClient,
 }
 
 pub async fn start(app_config: AppConfig) -> std::result::Result<(), ServerError> {
@@ -46,10 +48,15 @@ pub async fn start(app_config: AppConfig) -> std::result::Result<(), ServerError
         &app_config.queue.url,
         app_config.queue.max_connection_pool_size,
     )?;
+    let search_client = SearchClient::new(
+        &app_config.search.meilisearch_host,
+        &app_config.search.meilisearch_api_key,
+    );
     let app_state = AppState {
         db_connection_pool,
         cache_connection_pool,
         queue_connection_pool,
+        search_client,
     };
     // server running options
     let mut allow_origins: Vec<HeaderValue> = vec![];

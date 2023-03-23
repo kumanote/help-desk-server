@@ -1,6 +1,7 @@
 use crate::model::{
     FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryWithContents,
-    FaqItem, FaqItemContent, FaqSettings, FaqSettingsData, PagingResult, Slug,
+    FaqItem, FaqItemContent, FaqItemId, FaqItemWithContentsAndCategories, FaqSettings,
+    FaqSettingsData, PagingResult, Slug,
 };
 
 pub trait FaqRepository: Send + Sync + 'static {
@@ -74,6 +75,16 @@ pub trait FaqRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         slug: &Slug,
     ) -> Result<Option<FaqItem>, Self::Err>;
+    fn get_item_with_contents_and_categories_by_id(
+        &self,
+        tx: &mut Self::Transaction,
+        id: &FaqItemId,
+    ) -> Result<Option<FaqItemWithContentsAndCategories>, Self::Err>;
+    fn delete_item_with_contents_and_categories(
+        &self,
+        tx: &mut Self::Transaction,
+        item_with_contents_and_categories: FaqItemWithContentsAndCategories,
+    ) -> Result<(), Self::Err>;
     fn create_item_content(
         &self,
         tx: &mut Self::Transaction,

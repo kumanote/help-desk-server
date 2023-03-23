@@ -17,5 +17,5 @@ url = "127.0.0.1"
 max_connection_pool_size = 2
 
 [search]
-meilisearch_host = "127.0.0.1"
+meilisearch_host = "http://localhost:7700"
 meilisearch_api_key = "01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff"

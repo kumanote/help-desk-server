@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use domain::model::FaqItemWithContentsAndCategories;
+use domain::model::{FaqItemWithContentsAndCategories, PagingResult, SearchedFaqItem};
 use domain::repository::FaqSearchRepository;
 use futures::executor;
 use search::SearchClient;
@@ -44,5 +44,27 @@ impl FaqSearchRepository for FaqSearchRepositoryExecutor {
                 cause: anyhow!("failed to complete delete faq_item meilisearch document."),
             }),
         }
+    }
+
+    fn search_faq_items_by_text(
+        &self,
+        text: Option<&str>,
+        limit: u64,
+        offset: u64,
+    ) -> Result<PagingResult<SearchedFaqItem>, Self::Err> {
+        let search_results = executor::block_on(search::adapters::faq_item::search(
+            &self.search_client,
+            text.unwrap_or_default(),
+            limit as usize,
+            offset as usize,
+        ))?;
+        Ok(PagingResult {
+            total: search_results.total_hits.unwrap_or_default() as u64,
+            list: search_results
+                .hits
+                .into_iter()
+                .map(|hit| hit.result)
+                .collect(),
+        })
     }
 }

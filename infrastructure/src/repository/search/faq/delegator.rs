@@ -1,4 +1,4 @@
-use domain::model::FaqItemWithContentsAndCategories;
+use domain::model::{FaqItemWithContentsAndCategories, PagingResult, SearchedFaqItem};
 use domain::repository::FaqSearchRepository;
 use queue::QueueConnectionPool;
 
@@ -35,5 +35,14 @@ impl FaqSearchRepository for FaqSearchRepositoryDelegator {
         let mut queue_connection = self.queue_connection_pool.get()?;
         queue::publishers::search::publish_search_engine_task(&mut queue_connection, msg)?;
         Ok(())
+    }
+
+    fn search_faq_items_by_text(
+        &self,
+        _text: Option<&str>,
+        _limit: u64,
+        _offset: u64,
+    ) -> Result<PagingResult<SearchedFaqItem>, Self::Err> {
+        unimplemented!()
     }
 }

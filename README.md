@@ -14,6 +14,7 @@ To set up local environment, please follow the following instructions.
 
 - mysql client (optional)
 - `diesel_cli` (you can install by running `cargo install diesel_cli`)
+- nats client (optional)
 
 ## start up data storage processes.
 
@@ -89,7 +90,7 @@ See [Diesel](https://diesel.rs/) for more information.
   -H 'Authorization: Bearer MASTER_KEY' \
   --data-binary '{
     "description": "Default Search API Key",
-    "actions": ["search"],
+    "actions": ["*"],
     "indexes": ["*"],
     "expiresAt": null
   }'
@@ -110,4 +111,39 @@ See [Diesel](https://diesel.rs/) for more information.
 }
 # then you can use `01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff` as api key.
 % export MEILISEARCH_API_KEY=01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff
+```
+
+## initialize NATS stream/consumers
+
+```bash
+% nats str ls
+No Streams defined
+# if no stream exists, add new stream by the following command.
+% nats str add SEARCH \
+  --subjects "search" \
+  --ack \
+  --max-msgs=-1 \
+  --max-bytes=-1 \
+  --max-age=1y \
+  --storage=file \
+  --retention=limits \
+  --max-msg-size=-1 \
+  --max-msgs-per-subject=-1 \
+  --discard=old \
+  --dupe-window="2m0s" \
+  --replicas=1
+
+% nats con ls SEARCH
+No Consumers defined
+# if no consumer exists, add new consumer by the following command.
+nats con add SEARCH search \
+  --filter=search \
+  --ack=explicit \
+  --max-pending=1000 \
+  --wait=-1s \
+  --pull \
+  --replay=instant \
+  --deliver=all \
+  --sample=-1 \
+  --max-deliver=1
 ```

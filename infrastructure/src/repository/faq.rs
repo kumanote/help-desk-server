@@ -1,7 +1,8 @@
 use database::DbConnection;
 use domain::model::{
-    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryWithContents,
-    FaqItem, FaqItemContent, FaqSettings, FaqSettingsData, PagingResult, Slug,
+    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryItemWithCategory,
+    FaqCategoryWithContents, FaqItem, FaqItemContent, FaqItemId, FaqItemWithContentsAndCategories,
+    FaqSettings, FaqSettingsData, PagingResult, Slug,
 };
 use domain::repository::FaqRepository;
 
@@ -224,6 +225,74 @@ impl FaqRepository for FaqRepositoryImpl {
     ) -> Result<Option<FaqItem>, Self::Err> {
         let entity = database::adapters::faq_item::get_by_slug(tx, &slug)?;
         Ok(entity.map(Into::into))
+    }
+
+    fn get_item_with_contents_and_categories_by_id(
+        &self,
+        tx: &mut Self::Transaction,
+        id: &FaqItemId,
+    ) -> Result<Option<FaqItemWithContentsAndCategories>, Self::Err> {
+        let faq_item_entity = database::adapters::faq_item::get_by_id(tx, &id)?;
+        if faq_item_entity.is_none() {
+            return Ok(None);
+        }
+        let faq_item = FaqItem::from(faq_item_entity.unwrap());
+        let content_entities =
+            database::adapters::faq_item_content::get_list_by_faq_item_id(tx, &id)?;
+        let contents: Vec<FaqItemContent> = content_entities.into_iter().map(Into::into).collect();
+        let faq_category_item_entities =
+            database::adapters::faq_category_item::get_list_by_faq_item_id(tx, &id)?;
+        let faq_category_ids: Vec<&str> = faq_category_item_entities
+            .iter()
+            .map(|e| e.faq_category_id.as_str())
+            .collect();
+        let faq_category_entities =
+            database::adapters::faq_category::get_list_by_ids(tx, &faq_category_ids)?;
+        let faq_category_content_entities =
+            database::adapters::faq_category_content::get_list_by_faq_category_ids(
+                tx,
+                &faq_category_ids,
+            )?;
+        let categories: Vec<FaqCategoryItemWithCategory> = faq_category_item_entities
+            .into_iter()
+            .map(|category_item_entity| {
+                let category_item = FaqCategoryItem::from(category_item_entity);
+                let category: FaqCategory = faq_category_entities
+                    .iter()
+                    .find(|e| e.id.as_str() == category_item.faq_category_id.as_str())
+                    .unwrap()
+                    .into();
+                let category_contents: Vec<FaqCategoryContent> = faq_category_content_entities
+                    .iter()
+                    .filter(|e| {
+                        e.faq_category_id.as_str() == category_item.faq_category_id.as_str()
+                    })
+                    .map(Into::into)
+                    .collect();
+                let category_with_contents =
+                    FaqCategoryWithContents::from((category, category_contents));
+                FaqCategoryItemWithCategory::from((category_item, category_with_contents))
+            })
+            .collect();
+        Ok(Some((faq_item, contents, categories).into()))
+    }
+
+    fn delete_item_with_contents_and_categories(
+        &self,
+        tx: &mut Self::Transaction,
+        item_with_contents_and_categories: FaqItemWithContentsAndCategories,
+    ) -> Result<(), Self::Err> {
+        // delete
+        database::adapters::faq_item::delete_by_id(tx, &item_with_contents_and_categories.id)?;
+        // update faq_category_items.display_order
+        for category_item in item_with_contents_and_categories.categories {
+            database::adapters::faq_category_item::decrement_display_order_by_faq_category_id_and_from_display_order(
+                tx,
+                category_item.display_order,
+                &category_item.faq_category_id,
+            )?;
+        }
+        Ok(())
     }
 
     fn create_item_content(
