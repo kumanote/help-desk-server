@@ -16,7 +16,7 @@ use serde::Deserialize;
 #[derive(Debug, Deserialize)]
 pub struct SearchFaqCategoryParams {
     text: Option<String>,
-    ids: Option<Vec<String>>,
+    ids: Option<String>,
     limit: u64,
     offset: u64,
 }
@@ -32,7 +32,9 @@ pub async fn handler(
     let use_case = SearchFaqCategoryUseCaseImpl::new(faq_repository);
     let logic_input = SearchFaqCategoryUseCaseInput {
         text: params.text,
-        ids: params.ids,
+        ids: params
+            .ids
+            .map(|s| s.as_str().split(',').map(ToOwned::to_owned).collect()),
         limit: params.limit,
         offset: params.offset,
     };
