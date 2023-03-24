@@ -114,17 +114,16 @@ pub fn get_list_by_ids(conn: &mut DbConnection, ids: &Vec<&str>) -> Result<Vec<F
         .map_err(Into::into)
 }
 
-pub fn search_by_text(
+pub fn search(
     conn: &mut DbConnection,
     text: Option<&str>,
+    ids: Option<&Vec<&str>>,
     limit: i64,
     offset: i64,
 ) -> Result<(i64, Vec<FaqCategory>)> {
-    let total = build_query_for_search_by_text(text)
-        .count()
-        .get_result(conn)?;
+    let total = build_query_for_search(text, ids).count().get_result(conn)?;
     let results = if total > 0 {
-        build_query_for_search_by_text(text)
+        build_query_for_search(text, ids)
             .order((
                 faq_categories::display_order.asc(),
                 faq_categories::id.desc(),
@@ -138,16 +137,29 @@ pub fn search_by_text(
     Ok((total, results))
 }
 
-fn build_query_for_search_by_text(
-    text: Option<&str>,
-) -> faq_categories::BoxedQuery<diesel::mysql::Mysql> {
+fn build_query_for_search<'a>(
+    text: Option<&'a str>,
+    ids: Option<&'a Vec<&'a str>>,
+) -> faq_categories::BoxedQuery<'a, diesel::mysql::Mysql> {
     let mut query = faq_categories::table.into_boxed();
     let like = format!("%{}%", text.unwrap_or_default());
     let target_ids = faq_category_contents::table
         .filter(faq_category_contents::title.like(like))
         .select(faq_category_contents::faq_category_id);
-    if text.is_some() {
-        query = query.filter(faq_categories::id.eq_any(target_ids))
+    if let Some(ids) = ids {
+        if text.is_some() {
+            query = query.filter(
+                faq_categories::id
+                    .eq_any(target_ids)
+                    .or(faq_categories::id.eq_any(ids)),
+            )
+        } else {
+            query = query.filter(faq_categories::id.eq_any(ids))
+        }
+    } else {
+        if text.is_some() {
+            query = query.filter(faq_categories::id.eq_any(target_ids))
+        }
     }
     query
 }

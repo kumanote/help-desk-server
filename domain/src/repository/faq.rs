@@ -33,10 +33,11 @@ pub trait FaqRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         slug: &Slug,
     ) -> Result<Option<FaqCategory>, Self::Err>;
-    fn search_categories_by_text(
+    fn search_categories(
         &self,
         tx: &mut Self::Transaction,
         text: Option<&str>,
+        ids: Option<&Vec<&str>>,
         limit: u64,
         offset: u64,
     ) -> Result<PagingResult<FaqCategoryWithContents>, Self::Err>;

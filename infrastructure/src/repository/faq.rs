@@ -68,19 +68,16 @@ impl FaqRepository for FaqRepositoryImpl {
         Ok(entity.map(Into::into))
     }
 
-    fn search_categories_by_text(
+    fn search_categories(
         &self,
         tx: &mut Self::Transaction,
         text: Option<&str>,
+        ids: Option<&Vec<&str>>,
         limit: u64,
         offset: u64,
     ) -> Result<PagingResult<FaqCategoryWithContents>, Self::Err> {
-        let (total, category_entities) = database::adapters::faq_category::search_by_text(
-            tx,
-            text,
-            limit as i64,
-            offset as i64,
-        )?;
+        let (total, category_entities) =
+            database::adapters::faq_category::search(tx, text, ids, limit as i64, offset as i64)?;
         let category_ids: Vec<&str> = category_entities
             .iter()
             .map(|category| category.id.as_str())
