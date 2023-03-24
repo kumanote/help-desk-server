@@ -4,13 +4,16 @@ resolver = "2"
 members = [
     "cmd",
     "config/agent-rest",
+    "config/line-webhook",
     "config/job",
     "server/agent-rest",
+    "server/line-webhook",
     "job",
     "infrastructure",
     "domain",
     "data/cache",
     "data/database",
+    "data/line",
     "data/queue",
     "data/search",
 ]
@@ -28,13 +31,16 @@ rust-version = "1.67.0"
 # Internal crate dependencies.
 # Please do not add any test features here: they should be declared by the individual crate.
 agent-rest-config = { path = "config/agent-rest" }
-agent-rest-server = { path = "server/agent-rest" }
+line-webhook-config = { path = "config/line-webhook" }
 job-config = { path = "config/job" }
+agent-rest-server = { path = "server/agent-rest" }
+line-webhook-server = { path = "server/line-webhook" }
 job = { path = "job" }
 infrastructure = { path = "infrastructure" }
 domain = { path = "domain" }
 cache = { path = "data/cache" }
 database = { path = "data/database" }
+line = { path = "data/line" }
 queue = { path = "data/queue" }
 search = { path = "data/search" }
 
@@ -55,6 +61,9 @@ validator = { version = "0.16.0", features = ["derive", "phone"] }
 regex = "1.7.1"
 unicode-segmentation = "1.10.1"
 pbkdf2 = { version = "0.12.1", features = ["simple"] }
+hmac = "0.12.1"
+sha2 = "0.10.6"
+base64 = "0.21.0"
 jsonwebtoken = "8.2.0"
 diesel = { version = "2.0.3", features = ["mysql", "chrono", "r2d2", "serde_json"] }
 redis = { version = "0.22.3", features = ["r2d2"] }
