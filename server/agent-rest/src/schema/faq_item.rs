@@ -44,3 +44,17 @@ impl From<model::FaqItemWithContentsAndCategories> for FaqItem {
         }
     }
 }
+
+impl From<model::FaqItemWithContents> for FaqItem {
+    fn from(value: model::FaqItemWithContents) -> Self {
+        Self {
+            id: value.id.into(),
+            slug: value.slug.into(),
+            is_published: value.is_published,
+            published_at: value.published_at.map(|dt| dt.timestamp()),
+            last_updated_at: value.last_updated_at.map(|dt| dt.timestamp()),
+            contents: Some(value.contents.into_iter().map(Into::into).collect()),
+            categories: None,
+        }
+    }
+}

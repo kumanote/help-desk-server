@@ -1,4 +1,4 @@
-use crate::model::{FaqCategoryId, FaqCategoryWithContents, FaqItemId};
+use crate::model::{FaqCategoryId, FaqCategoryWithContents, FaqItemId, FaqItemWithContents};
 
 #[derive(Debug, Clone)]
 pub struct FaqCategoryItem {
@@ -22,6 +22,16 @@ impl From<database::entities::FaqCategoryItem> for FaqCategoryItem {
         Self {
             faq_category_id: value.faq_category_id.into(),
             faq_item_id: value.faq_item_id.into(),
+            display_order: value.display_order,
+        }
+    }
+}
+
+impl From<&database::entities::FaqCategoryItem> for FaqCategoryItem {
+    fn from(value: &database::entities::FaqCategoryItem) -> Self {
+        Self {
+            faq_category_id: value.faq_category_id.clone().into(),
+            faq_item_id: value.faq_item_id.clone().into(),
             display_order: value.display_order,
         }
     }
@@ -64,6 +74,25 @@ impl From<queue::entities::FaqCategoryItemWithCategory> for FaqCategoryItemWithC
             faq_item_id: value.faq_item_id.into(),
             display_order: value.display_order,
             category: value.category.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct FaqCategoryItemWithItem {
+    pub faq_category_id: FaqCategoryId,
+    pub faq_item_id: FaqItemId,
+    pub display_order: u32,
+    pub item: FaqItemWithContents,
+}
+
+impl From<(FaqCategoryItem, FaqItemWithContents)> for FaqCategoryItemWithItem {
+    fn from((category_item, item): (FaqCategoryItem, FaqItemWithContents)) -> Self {
+        Self {
+            faq_category_id: category_item.faq_category_id,
+            faq_item_id: category_item.faq_item_id,
+            display_order: category_item.display_order,
+            item,
         }
     }
 }
