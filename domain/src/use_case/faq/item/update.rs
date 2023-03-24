@@ -128,9 +128,10 @@ impl<
                 contents_should_be_removed_from_public_search.push(existing_content.clone());
                 continue;
             }
-            if !contents
-                .iter()
-                .any(|new_content| new_content.locale == existing_content.locale)
+            if item_with_contents_and_categories.is_published
+                && !contents
+                    .iter()
+                    .any(|new_content| new_content.locale == existing_content.locale)
             {
                 contents_should_be_removed_from_public_search.push(existing_content.clone());
             }
