@@ -18,6 +18,12 @@ pub fn delete_by_pk(conn: &mut DbConnection, faq_item_id: &str, locale: &str) ->
         .map_err(Into::into)
 }
 
+pub fn delete_by_faq_item_id(conn: &mut DbConnection, faq_item_id: &str) -> Result<usize> {
+    diesel::delete(faq_item_contents::table.filter(faq_item_contents::faq_item_id.eq(faq_item_id)))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn update_by_pk(
     conn: &mut DbConnection,
     title: &str,

@@ -1,8 +1,9 @@
 use crate::model::{
-    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryWithContents,
-    FaqItem, FaqItemContent, FaqItemId, FaqItemWithContentsAndCategories, FaqSettings,
-    FaqSettingsData, PagingResult, Slug,
+    FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryItemWithCategory,
+    FaqCategoryWithContents, FaqItem, FaqItemContent, FaqItemId, FaqItemWithContentsAndCategories,
+    FaqSettings, FaqSettingsData, PagingResult, Slug,
 };
+use chrono::NaiveDateTime;
 
 pub trait FaqRepository: Send + Sync + 'static {
     type Err;
@@ -86,6 +87,17 @@ pub trait FaqRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         item_with_contents_and_categories: FaqItemWithContentsAndCategories,
     ) -> Result<(), Self::Err>;
+    fn update_item_with_contents_and_categories(
+        &self,
+        tx: &mut Self::Transaction,
+        item_with_contents_and_categories: &mut FaqItemWithContentsAndCategories,
+        slug: Slug,
+        is_published: bool,
+        published_at: Option<NaiveDateTime>,
+        last_updated_at: Option<NaiveDateTime>,
+        contents: Vec<FaqItemContent>,
+        categories: Vec<FaqCategoryItemWithCategory>,
+    ) -> Result<(), Self::Err>;
     fn create_item_content(
         &self,
         tx: &mut Self::Transaction,
@@ -100,5 +112,10 @@ pub trait FaqRepository: Send + Sync + 'static {
         &self,
         tx: &mut Self::Transaction,
         category_item: &FaqCategoryItem,
+    ) -> Result<(), Self::Err>;
+    fn delete_category_item(
+        &self,
+        tx: &mut Self::Transaction,
+        category_item: FaqCategoryItem,
     ) -> Result<(), Self::Err>;
 }

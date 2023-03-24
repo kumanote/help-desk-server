@@ -55,7 +55,9 @@ pub fn router(state: AppState) -> Router {
         )
         .route(
             "/faq/items/:id",
-            get(faq::item::get::handler).delete(faq::item::delete::handler),
+            get(faq::item::get::handler)
+                .put(faq::item::update::handler)
+                .delete(faq::item::delete::handler),
         )
         .route(
             "/general/faq_content_locales/",

@@ -13,6 +13,16 @@ pub fn create(conn: &mut DbConnection, entity: NewFaqCategoryItem) -> Result<usi
         .map_err(Into::into)
 }
 
+pub fn delete_by_pk(
+    conn: &mut DbConnection,
+    faq_category_id: &str,
+    faq_item_id: &str,
+) -> Result<usize> {
+    diesel::delete(faq_category_items::table.find((faq_category_id, faq_item_id)))
+        .execute(conn)
+        .map_err(Into::into)
+}
+
 pub fn update_display_order_by_id(
     conn: &mut DbConnection,
     display_order: u32,
