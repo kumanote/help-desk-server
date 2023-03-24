@@ -8,6 +8,7 @@ const MAX_LIMIT: u64 = 100;
 
 pub struct SearchFaqCategoryUseCaseInput {
     pub text: Option<String>,
+    pub ids: Option<Vec<String>>,
     pub limit: u64,
     pub offset: u64,
 }
@@ -48,9 +49,14 @@ impl<TX, FR: FaqRepository<Err = Error, Transaction = TX>> SearchFaqCategoryUseC
         if params.limit > MAX_LIMIT {
             return Ok(SearchFaqCategoryUseCaseOutput::default());
         }
-        self.faq_repository.search_categories_by_text(
+        let ids: Option<Vec<&str>> = params
+            .ids
+            .as_ref()
+            .map(|ids| ids.iter().map(String::as_str).collect());
+        self.faq_repository.search_categories(
             tx,
             params.text.as_deref(),
+            ids.as_ref(),
             params.limit,
             params.offset,
         )
