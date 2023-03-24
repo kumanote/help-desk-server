@@ -1,7 +1,7 @@
 use crate::model::{
     FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryItemWithCategory,
-    FaqCategoryWithContents, FaqItem, FaqItemContent, FaqItemId, FaqItemWithContentsAndCategories,
-    FaqSettings, FaqSettingsData, PagingResult, Slug,
+    FaqCategoryItemWithItem, FaqCategoryWithContents, FaqItem, FaqItemContent, FaqItemId,
+    FaqItemWithContentsAndCategories, FaqSettings, FaqSettingsData, PagingResult, Slug,
 };
 use chrono::NaiveDateTime;
 
@@ -82,6 +82,13 @@ pub trait FaqRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         id: &FaqItemId,
     ) -> Result<Option<FaqItemWithContentsAndCategories>, Self::Err>;
+    fn search_items_by_category_id(
+        &self,
+        tx: &mut Self::Transaction,
+        category_id: &FaqCategoryId,
+        limit: u64,
+        offset: u64,
+    ) -> Result<PagingResult<FaqCategoryItemWithItem>, Self::Err>;
     fn delete_item_with_contents_and_categories(
         &self,
         tx: &mut Self::Transaction,
@@ -117,5 +124,18 @@ pub trait FaqRepository: Send + Sync + 'static {
         &self,
         tx: &mut Self::Transaction,
         category_item: FaqCategoryItem,
+    ) -> Result<(), Self::Err>;
+    fn get_category_item_by_pk(
+        &self,
+        tx: &mut Self::Transaction,
+        faq_category_id: &FaqCategoryId,
+        faq_item_id: &FaqItemId,
+    ) -> Result<Option<FaqCategoryItem>, Self::Err>;
+    fn reorder_category_item(
+        &self,
+        tx: &mut Self::Transaction,
+        objective: FaqCategoryItem,
+        target: FaqCategoryItem,
+        append: bool,
     ) -> Result<(), Self::Err>;
 }

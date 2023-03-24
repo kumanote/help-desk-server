@@ -23,7 +23,7 @@ pub fn delete_by_pk(
         .map_err(Into::into)
 }
 
-pub fn update_display_order_by_id(
+pub fn update_display_order_by_pk(
     conn: &mut DbConnection,
     display_order: u32,
     faq_category_id: &str,
@@ -81,7 +81,7 @@ pub fn decrement_display_order_by_faq_category_id_and_from_display_order(
     .execute(conn)?)
 }
 
-pub fn get_by_id(
+pub fn get_by_pk(
     conn: &mut DbConnection,
     faq_category_id: &str,
     faq_item_id: &str,
@@ -116,4 +116,36 @@ pub fn get_list_by_faq_item_id(
         .filter(faq_category_items::faq_item_id.eq(faq_item_id))
         .load::<FaqCategoryItem>(conn)
         .map_err(Into::into)
+}
+
+pub fn search_by_category_id(
+    conn: &mut DbConnection,
+    faq_category_id: &str,
+    limit: i64,
+    offset: i64,
+) -> Result<(i64, Vec<FaqCategoryItem>)> {
+    let total = build_query_for_search_by_category_id(faq_category_id)
+        .count()
+        .get_result(conn)?;
+    let results = if total > 0 {
+        build_query_for_search_by_category_id(faq_category_id)
+            .order((
+                faq_category_items::display_order.asc(),
+                faq_category_items::faq_item_id.desc(),
+            ))
+            .limit(limit)
+            .offset(offset)
+            .load::<FaqCategoryItem>(conn)?
+    } else {
+        vec![]
+    };
+    Ok((total, results))
+}
+
+fn build_query_for_search_by_category_id(
+    faq_category_id: &str,
+) -> faq_category_items::BoxedQuery<diesel::mysql::Mysql> {
+    faq_category_items::table
+        .into_boxed()
+        .filter(faq_category_items::faq_category_id.eq(faq_category_id))
 }

@@ -2,8 +2,9 @@ use chrono::NaiveDateTime;
 use database::DbConnection;
 use domain::model::{
     FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryItemWithCategory,
-    FaqCategoryWithContents, FaqItem, FaqItemContent, FaqItemId, FaqItemWithContentsAndCategories,
-    FaqSettings, FaqSettingsData, PagingResult, Slug,
+    FaqCategoryItemWithItem, FaqCategoryWithContents, FaqItem, FaqItemContent, FaqItemId,
+    FaqItemWithContents, FaqItemWithContentsAndCategories, FaqSettings, FaqSettingsData,
+    PagingResult, Slug,
 };
 use domain::repository::FaqRepository;
 
@@ -275,6 +276,51 @@ impl FaqRepository for FaqRepositoryImpl {
         Ok(Some((faq_item, contents, categories).into()))
     }
 
+    fn search_items_by_category_id(
+        &self,
+        tx: &mut Self::Transaction,
+        category_id: &FaqCategoryId,
+        limit: u64,
+        offset: u64,
+    ) -> Result<PagingResult<FaqCategoryItemWithItem>, Self::Err> {
+        let (total, category_item_entities) =
+            database::adapters::faq_category_item::search_by_category_id(
+                tx,
+                &category_id,
+                limit as i64,
+                offset as i64,
+            )?;
+        let item_ids: Vec<&str> = category_item_entities
+            .iter()
+            .map(|entity| entity.faq_item_id.as_str())
+            .collect();
+        let item_entities = database::adapters::faq_item::get_list_by_ids(tx, &item_ids)?;
+        let item_content_entities =
+            database::adapters::faq_item_content::get_list_by_faq_item_ids(tx, &item_ids)?;
+        let list = category_item_entities
+            .into_iter()
+            .map(|category_item_entity| {
+                let category_item = FaqCategoryItem::from(category_item_entity);
+                let item_entity = item_entities
+                    .iter()
+                    .find(|item| item.id.as_str() == category_item.faq_item_id.as_str())
+                    .unwrap();
+                let item = FaqItem::from(item_entity);
+                let contents: Vec<FaqItemContent> = item_content_entities
+                    .iter()
+                    .filter(|c| c.faq_item_id.as_str() == category_item.faq_item_id.as_str())
+                    .map(FaqItemContent::from)
+                    .collect();
+                let items_with_content = FaqItemWithContents::from((item, contents));
+                FaqCategoryItemWithItem::from((category_item, items_with_content))
+            })
+            .collect();
+        Ok(PagingResult {
+            total: total as u64,
+            list,
+        })
+    }
+
     fn delete_item_with_contents_and_categories(
         &self,
         tx: &mut Self::Transaction,
@@ -376,6 +422,67 @@ impl FaqRepository for FaqRepositoryImpl {
             tx,
             category_item.display_order,
             &category_item.faq_category_id,
+        )?;
+        Ok(())
+    }
+
+    fn get_category_item_by_pk(
+        &self,
+        tx: &mut Self::Transaction,
+        faq_category_id: &FaqCategoryId,
+        faq_item_id: &FaqItemId,
+    ) -> Result<Option<FaqCategoryItem>, Self::Err> {
+        let entity =
+            database::adapters::faq_category_item::get_by_pk(tx, &faq_category_id, &faq_item_id)?;
+        Ok(entity.map(Into::into))
+    }
+
+    fn reorder_category_item(
+        &self,
+        tx: &mut Self::Transaction,
+        objective: FaqCategoryItem,
+        target: FaqCategoryItem,
+        append: bool,
+    ) -> Result<(), Self::Err> {
+        assert_eq!(objective.faq_category_id, target.faq_category_id);
+        if target.faq_item_id == objective.faq_item_id
+            || target.display_order == objective.display_order
+        {
+            return Ok(());
+        }
+        let pre_display_order = objective.display_order;
+        let next_display_order = if objective.display_order < target.display_order {
+            let next_display_order = if append {
+                target.display_order
+            } else {
+                target.display_order - 1
+            };
+            database::adapters::faq_category_item::decrement_display_order_by_faq_category_id_and_range(
+                tx,
+                pre_display_order + 1,
+                next_display_order,
+                &objective.faq_category_id,
+            )?;
+            next_display_order
+        } else {
+            let next_display_order = if append {
+                target.display_order + 1
+            } else {
+                target.display_order
+            };
+            database::adapters::faq_category_item::increment_display_order_by_faq_category_id_and_range(
+                tx,
+                next_display_order,
+                pre_display_order - 1,
+                &objective.faq_category_id,
+            )?;
+            next_display_order
+        };
+        database::adapters::faq_category_item::update_display_order_by_pk(
+            tx,
+            next_display_order,
+            &objective.faq_category_id,
+            &objective.faq_item_id,
         )?;
         Ok(())
     }

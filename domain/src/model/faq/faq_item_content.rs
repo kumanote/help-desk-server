@@ -41,6 +41,17 @@ impl From<database::entities::FaqItemContent> for FaqItemContent {
     }
 }
 
+impl From<&database::entities::FaqItemContent> for FaqItemContent {
+    fn from(value: &database::entities::FaqItemContent) -> Self {
+        Self {
+            faq_item_id: value.faq_item_id.clone().into(),
+            locale: value.locale.clone().into(),
+            title: value.title.clone().into(),
+            body: value.body.clone().into(),
+        }
+    }
+}
+
 impl Into<queue::entities::FaqItemContent> for FaqItemContent {
     fn into(self) -> queue::entities::FaqItemContent {
         queue::entities::FaqItemContent {

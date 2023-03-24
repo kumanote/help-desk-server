@@ -40,14 +40,22 @@ pub fn router(state: AppState) -> Router {
             get(faq::category::search::handler).post(faq::category::create::handler),
         )
         .route(
+            "/faq/categories/reorder",
+            post(faq::category::reorder::handler),
+        )
+        .route(
             "/faq/categories/:id",
             get(faq::category::get::handler)
                 .put(faq::category::update::handler)
                 .delete(faq::category::delete::handler),
         )
         .route(
-            "/faq/categories/reorder",
-            post(faq::category::reorder::handler),
+            "/faq/categories/:id/items/",
+            get(faq::category::search_items::handler),
+        )
+        .route(
+            "/faq/categories/:id/reorder_items",
+            post(faq::category::reorder_items::handler),
         )
         .route(
             "/faq/items/",
