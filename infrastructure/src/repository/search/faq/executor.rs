@@ -58,8 +58,9 @@ impl FaqSearchRepository for FaqSearchRepositoryExecutor {
             limit as usize,
             offset as usize,
         ))?;
+        // println!("search_results: {:?}", search_results);
         Ok(PagingResult {
-            total: search_results.total_hits.unwrap_or_default() as u64,
+            total: search_results.estimated_total_hits.unwrap_or_default() as u64,
             list: search_results
                 .hits
                 .into_iter()

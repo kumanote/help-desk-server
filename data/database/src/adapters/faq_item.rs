@@ -19,15 +19,9 @@ pub fn delete_by_id(conn: &mut DbConnection, id: &str) -> Result<usize> {
         .map_err(Into::into)
 }
 
-pub fn update_slug_by_id(conn: &mut DbConnection, slug: &str, id: &str) -> Result<usize> {
-    diesel::update(faq_items::dsl::faq_items.find(id))
-        .set(faq_items::slug.eq(slug))
-        .execute(conn)
-        .map_err(Into::into)
-}
-
-pub fn update_published_by_id(
+pub fn update_by_id(
     conn: &mut DbConnection,
+    slug: &str,
     is_published: bool,
     published_at: Option<NaiveDateTime>,
     last_updated_at: Option<NaiveDateTime>,
@@ -35,6 +29,7 @@ pub fn update_published_by_id(
 ) -> Result<usize> {
     diesel::update(faq_items::dsl::faq_items.find(id))
         .set((
+            faq_items::slug.eq(slug),
             faq_items::is_published.eq(is_published),
             faq_items::published_at.eq(published_at),
             faq_items::last_updated_at.eq(last_updated_at),

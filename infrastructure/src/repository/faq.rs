@@ -1,3 +1,4 @@
+use chrono::NaiveDateTime;
 use database::DbConnection;
 use domain::model::{
     FaqCategory, FaqCategoryContent, FaqCategoryId, FaqCategoryItem, FaqCategoryItemWithCategory,
@@ -292,6 +293,43 @@ impl FaqRepository for FaqRepositoryImpl {
         Ok(())
     }
 
+    fn update_item_with_contents_and_categories(
+        &self,
+        tx: &mut Self::Transaction,
+        item_with_contents_and_categories: &mut FaqItemWithContentsAndCategories,
+        slug: Slug,
+        is_published: bool,
+        published_at: Option<NaiveDateTime>,
+        last_updated_at: Option<NaiveDateTime>,
+        contents: Vec<FaqItemContent>,
+        categories: Vec<FaqCategoryItemWithCategory>,
+    ) -> Result<(), Self::Err> {
+        // refresh contents
+        database::adapters::faq_item_content::delete_by_faq_item_id(
+            tx,
+            &item_with_contents_and_categories.id,
+        )?;
+        for content in &contents {
+            database::adapters::faq_item_content::create(tx, content.into())?;
+        }
+        // update item
+        database::adapters::faq_item::update_by_id(
+            tx,
+            &slug,
+            is_published,
+            published_at,
+            last_updated_at,
+            &item_with_contents_and_categories.id,
+        )?;
+        item_with_contents_and_categories.slug = slug;
+        item_with_contents_and_categories.is_published = is_published;
+        item_with_contents_and_categories.published_at = published_at;
+        item_with_contents_and_categories.last_updated_at = last_updated_at;
+        item_with_contents_and_categories.contents = contents;
+        item_with_contents_and_categories.categories = categories;
+        Ok(())
+    }
+
     fn create_item_content(
         &self,
         tx: &mut Self::Transaction,
@@ -321,6 +359,24 @@ impl FaqRepository for FaqRepositoryImpl {
         category_item: &FaqCategoryItem,
     ) -> Result<(), Self::Err> {
         database::adapters::faq_category_item::create(tx, category_item.into())?;
+        Ok(())
+    }
+
+    fn delete_category_item(
+        &self,
+        tx: &mut Self::Transaction,
+        category_item: FaqCategoryItem,
+    ) -> Result<(), Self::Err> {
+        database::adapters::faq_category_item::delete_by_pk(
+            tx,
+            &category_item.faq_category_id,
+            &category_item.faq_item_id,
+        )?;
+        database::adapters::faq_category_item::decrement_display_order_by_faq_category_id_and_from_display_order(
+            tx,
+            category_item.display_order,
+            &category_item.faq_category_id,
+        )?;
         Ok(())
     }
 }
