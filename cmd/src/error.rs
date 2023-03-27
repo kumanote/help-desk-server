@@ -8,12 +8,24 @@ pub enum Error {
     AgentRestApiServerError {
         cause: agent_rest_server::ServerError,
     },
+    #[error("LineWebhookServerError: {cause}")]
+    LineWebhookServerError {
+        cause: line_webhook_server::ServerError,
+    },
     #[error("JobExecutionError: {cause}")]
     JobExecutionError { cause: job::Error },
 }
 
 impl From<agent_rest_config::Error> for Error {
     fn from(cause: agent_rest_config::Error) -> Self {
+        Self::ImproperConfigError {
+            cause: format!("{}", cause),
+        }
+    }
+}
+
+impl From<line_webhook_config::Error> for Error {
+    fn from(cause: line_webhook_config::Error) -> Self {
         Self::ImproperConfigError {
             cause: format!("{}", cause),
         }
@@ -31,6 +43,12 @@ impl From<job_config::Error> for Error {
 impl From<agent_rest_server::ServerError> for Error {
     fn from(cause: agent_rest_server::ServerError) -> Self {
         Self::AgentRestApiServerError { cause }
+    }
+}
+
+impl From<line_webhook_server::ServerError> for Error {
+    fn from(cause: line_webhook_server::ServerError) -> Self {
+        Self::LineWebhookServerError { cause }
     }
 }
 
