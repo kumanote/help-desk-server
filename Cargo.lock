@@ -1506,11 +1506,14 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "dotenv",
+ "hyper",
+ "hyper-rustls",
  "serde",
  "serde_json",
  "serial_test",
  "thiserror",
  "tokio",
+ "url",
 ]
 
 [[package]]
