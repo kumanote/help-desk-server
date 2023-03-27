@@ -145,3 +145,10 @@ CREATE TABLE IF NOT EXISTS `faq_category_items`
     FOREIGN KEY `fk_faq_category_item_faq_category_id` (`faq_category_id`) references faq_categories(`id`) ON DELETE CASCADE,
     FOREIGN KEY `fk_faq_category_item_faq_item_id` (`faq_item_id`) references faq_items(`id`) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS `inquiry_settings`
+(
+    `id` varchar(26) NOT NULL,
+    `data` json NOT NULL,
+    PRIMARY KEY (`id`) CLUSTERED
+);

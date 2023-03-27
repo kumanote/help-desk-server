@@ -11,6 +11,8 @@ pub enum LineBotApiUrl {
     TestWebhookEndpoint,
     /// Send push message. [\[detail\]](https://developers.line.biz/en/reference/messaging-api/#send-push-message)
     SendPushMessage,
+    /// Get profile. [\[detail\]](https://developers.line.biz/en/reference/messaging-api/#get-profile)
+    GetProfile { user_id: String },
 }
 
 impl LineBotApiUrl {
@@ -19,6 +21,10 @@ impl LineBotApiUrl {
             Self::GetWebhookEndpoint => build_url(BASE_URL, Some("channel/webhook/endpoint"), None),
             Self::TestWebhookEndpoint => build_url(BASE_URL, Some("channel/webhook/test"), None),
             Self::SendPushMessage => build_url(BASE_URL, Some("message/push"), None),
+            Self::GetProfile { user_id } => {
+                let path = format!("profile/{}", user_id);
+                build_url(BASE_URL, Some(&path), None)
+            },
         };
         url.to_string()
     }

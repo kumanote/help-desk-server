@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Profile {
     #[serde(rename = "userId")]
     pub user_id: Option<String>,

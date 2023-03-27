@@ -100,6 +100,13 @@ table! {
 }
 
 table! {
+    inquiry_settings (id) {
+        id -> Varchar,
+        data -> Json,
+    }
+}
+
+table! {
     role_scopes (role_id, scope) {
         role_id -> Varchar,
         scope -> Varchar,
@@ -155,6 +162,7 @@ allow_tables_to_appear_in_same_query!(
     group_members,
     group_roles,
     groups,
+    inquiry_settings,
     role_scopes,
     roles,
     roles_for_group,

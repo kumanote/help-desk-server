@@ -91,3 +91,8 @@ def_id!(FileId);
 def_id!(FaqSettingsId);
 def_id!(FaqCategoryId);
 def_id!(FaqItemId);
+def_id!(InquirySettingsId);
+def_id!(InquiryContactId);
+def_id!(InquiryChannelId);
+def_id!(InquiryThreadId);
+def_id!(InquiryMessageId);

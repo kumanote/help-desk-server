@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `inquiry_settings`;
 DROP TABLE IF EXISTS `faq_category_items`;
 DROP TABLE IF EXISTS `faq_item_contents`;
 DROP TABLE IF EXISTS `faq_items`;
