@@ -4,6 +4,11 @@ secret_key = "4429d684156b0c8c78c212e2aae30fcddff83e58e1bd068ce4ed1113fb8b4a70"
 bind_address = "0.0.0.0:8000"
 allowed_origins = ["http://localhost:3000", "http://192.168.10.201:3000"]
 
+[line_webhook]
+channel_secret = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+channel_access_token = "xxxxxxxxxxxxx/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx="
+bind_address = "0.0.0.0:8001"
+
 [database]
 url = "mysql://help_desk:password@127.0.0.1:4000/help_desk?charset=utf8mb4"
 max_connection_pool_size = 2

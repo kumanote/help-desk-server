@@ -1,5 +1,5 @@
 [package]
-name = "help-desk-server"
+name = "line-webhook-server"
 version = "0.1.0"
 # Workspace inherited keys
 authors = { workspace = true }
@@ -12,22 +12,28 @@ rust-version = { workspace = true }
 
 [dependencies]
 # workspace members
-agent-rest-config = { workspace = true }
-agent-rest-server = { workspace = true }
 line-webhook-config = { workspace = true }
-line-webhook-server = { workspace = true }
-job-config = { workspace = true }
-job = { workspace = true }
+infrastructure = { workspace = true }
+domain = { workspace = true }
+queue = { workspace = true }
+line = { workspace = true }
 
 # external libraries
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-dotenv = { workspace = true }
 chrono = { workspace = true }
 futures = { workspace = true }
 tokio = { workspace = true }
-clap = { workspace = true }
+once_cell = { workspace = true }
+hmac = { workspace = true }
+sha2 = { workspace = true }
+base64 = { workspace = true }
+axum = { workspace = true }
+axum-client-ip = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
 
 [dev-dependencies]
+dotenv = "0.15.0"

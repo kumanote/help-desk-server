@@ -147,3 +147,21 @@ nats con add SEARCH search \
   --sample=-1 \
   --max-deliver=1
 ```
+
+## Test local webhook server
+
+* install `ngrok` if you have not installed yet.
+
+```bash
+% brew install ngrok --cask
+```
+
+* how to use ngrok
+  * please sign in to [ngrok dashboard](https://dashboard.ngrok.com/) and get your `authtoken`.
+
+```bash
+% ngrok config add-authtoken <your-ngrok-authtoken>
+# below is the case webhook server port is 8001.
+% ngrok http 8001
+# then you can use "Forwarding" url to webhook i.e. ' https://xxxx-xxx-xxx-xx-xx.xx.ngrok.io/events/'
+```
