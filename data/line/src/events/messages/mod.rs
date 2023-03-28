@@ -25,7 +25,7 @@ pub use mention::{Mention, Mentionee};
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct MessageEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: String,
@@ -35,13 +35,13 @@ pub struct MessageEvent {
     pub message: Message,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Message {
     #[serde(flatten)]
     pub r#type: MessageType,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "type")]
 pub enum MessageType {
     #[serde(rename = "text")]

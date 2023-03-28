@@ -1,3 +1,8 @@
+DROP TABLE IF EXISTS `inquiry_messages`;
+DROP TABLE IF EXISTS `inquiry_threads`;
+DROP TABLE IF EXISTS `inquiry_contact_channels`;
+DROP TABLE IF EXISTS `inquiry_channels`;
+DROP TABLE IF EXISTS `inquiry_contacts`;
 DROP TABLE IF EXISTS `inquiry_settings`;
 DROP TABLE IF EXISTS `faq_category_items`;
 DROP TABLE IF EXISTS `faq_item_contents`;

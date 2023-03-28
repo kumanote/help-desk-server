@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct StickerMessage {
     pub id: String,
     #[serde(rename = "stickerId")]

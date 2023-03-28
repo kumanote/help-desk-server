@@ -1,12 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct ContentProvider {
     #[serde(flatten)]
     pub r#type: ContentProviderType,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "type")]
 pub enum ContentProviderType {
     #[serde(rename = "external")]
@@ -15,7 +15,7 @@ pub enum ContentProviderType {
     Other,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct External {
     #[serde(rename = "originalContentUrl")]
     pub original_content_url: String,

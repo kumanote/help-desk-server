@@ -1,4 +1,5 @@
 use crate::model::{InquiryContactId, Memo};
+use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
 pub type InquiryContactMemo = Memo;
@@ -9,6 +10,29 @@ pub struct InquiryContact {
     pub id: InquiryContactId,
     pub details: InquiryContactDetails,
     pub memo: Option<InquiryContactMemo>,
+    pub created_at: NaiveDateTime,
+}
+
+impl<'a> Into<database::entities::NewInquiryContact<'a>> for &'a InquiryContact {
+    fn into(self) -> database::entities::NewInquiryContact<'a> {
+        database::entities::NewInquiryContact {
+            id: &self.id,
+            details: (&self.details).into(),
+            memo: self.memo.as_deref(),
+            created_at: self.created_at,
+        }
+    }
+}
+
+impl From<database::entities::InquiryContact> for InquiryContact {
+    fn from(value: database::entities::InquiryContact) -> Self {
+        Self {
+            id: value.id.into(),
+            details: value.details.into(),
+            memo: value.memo.map(Into::into),
+            created_at: value.created_at,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
