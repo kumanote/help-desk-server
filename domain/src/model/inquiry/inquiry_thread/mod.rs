@@ -28,6 +28,7 @@ impl<'a> Into<database::entities::NewInquiryThread<'a>> for &'a InquiryThread {
             inquiry_channel_id: &self.inquiry_channel_id,
             subject: &self.subject,
             inquiry_thread_type: self.details.as_type(),
+            inquiry_thread_type_id: self.details.as_type_id(),
             details: (&self.details).into(),
             status: &self.status,
             assigned_agent_id: self.assigned_agent_id.as_deref(),

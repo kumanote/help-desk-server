@@ -156,21 +156,25 @@ CREATE TABLE IF NOT EXISTS `inquiry_settings`
 CREATE TABLE IF NOT EXISTS `inquiry_contacts`
 (
     `id` varchar(26) NOT NULL,
+    `line_user_id` varchar(255) NULL,
     `details` json NOT NULL,
     `memo` varchar(4095) NULL,
     `created_at` datetime NOT NULL,
-    PRIMARY KEY (`id`) CLUSTERED
+    PRIMARY KEY (`id`) CLUSTERED,
+    INDEX `idx_inquiry_contact_by_line_user_id` (`line_user_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `inquiry_channels`
 (
     `id` varchar(26) NOT NULL,
     `inquiry_channel_type` varchar(31) NOT NULL,
+    `inquiry_channel_type_id` varchar(255) NOT NULL,
     `details` json NOT NULL,
     `is_active` boolean NOT NULL,
     `activated_at` datetime NOT NULL,
     `deactivated_at` datetime NULL,
-    PRIMARY KEY (`id`) CLUSTERED
+    PRIMARY KEY (`id`) CLUSTERED,
+    UNIQUE `uk_inquiry_channel_type_id` (`inquiry_channel_type`, `inquiry_channel_type_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `inquiry_contact_channels`
@@ -189,12 +193,14 @@ CREATE TABLE IF NOT EXISTS `inquiry_threads`
     `inquiry_channel_id` varchar(26) NOT NULL,
     `subject` varchar(400) NOT NULL,
     `inquiry_thread_type` varchar(31) NOT NULL,
+    `inquiry_thread_type_id` varchar(255) NOT NULL,
     `details` json NOT NULL,
     `status` varchar(31) NOT NULL,
     `assigned_agent_id` varchar(26) NULL,
     `opened_at` datetime NOT NULL,
     `closed_at` datetime NULL,
     PRIMARY KEY (`id`) CLUSTERED,
+    UNIQUE `uk_inquiry_thread_type_id` (`inquiry_thread_type`, `inquiry_thread_type_id`),
     FOREIGN KEY `fk_inquiry_thread_inquiry_channel_id` (`inquiry_channel_id`) references inquiry_channels(`id`) ON DELETE CASCADE,
     FOREIGN KEY `fk_inquiry_thread_assigned_agent_id` (`assigned_agent_id`) references agents(`id`) ON DELETE SET NULL
 );

@@ -1,16 +1,19 @@
 use super::{publish, publish_async};
-use crate::entities::Search;
+use crate::entities::InquiryIncomingEvent;
 use crate::{QueueAsyncConnection, QueueConnection, Result};
 
-pub fn publish_search_engine_task(conn: &mut QueueConnection, msg: Search) -> Result<()> {
+pub fn publish_inquiry_incoming_event_task(
+    conn: &mut QueueConnection,
+    msg: InquiryIncomingEvent,
+) -> Result<()> {
     let subject = msg.get_subject();
     let msg = serde_json::to_vec(&msg)?;
     publish(conn, &subject, msg)
 }
 
-pub async fn publish_search_engine_task_async(
+pub async fn publish_inquiry_incoming_event_task_async(
     conn: &mut QueueAsyncConnection,
-    msg: Search,
+    msg: InquiryIncomingEvent,
 ) -> Result<()> {
     let subject = msg.get_subject();
     let msg = serde_json::to_vec(&msg)?;

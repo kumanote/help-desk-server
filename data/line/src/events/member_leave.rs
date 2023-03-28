@@ -1,7 +1,7 @@
 use crate::events::{Member, Source};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct MemberLeaveEvent {
     pub mode: String,
     pub timestamp: i64,
@@ -9,7 +9,7 @@ pub struct MemberLeaveEvent {
     pub left: Left,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Left {
     pub members: Vec<Member>,
 }

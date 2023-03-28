@@ -32,19 +32,19 @@ pub use video_play_complete::VideoPlayCompleteEvent;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Events {
     pub events: Vec<Event>,
     pub destination: String,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Event {
     #[serde(flatten)]
     pub r#type: EventType,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(tag = "type")]
 pub enum EventType {
     #[serde(rename = "unsend")]

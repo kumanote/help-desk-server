@@ -1,3 +1,4 @@
+use crate::subjects::{NatsSearchSubject, NatsSubject};
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
@@ -8,6 +9,17 @@ pub enum Search {
     DeleteFaqItem(FaqItemWithContentsAndCategories),
     UpsertPublicFaqItem(FaqItemContent),
     DeletePublicFaqItem(FaqItemContent),
+}
+
+impl Search {
+    pub fn get_subject(&self) -> NatsSubject {
+        match self {
+            Self::UpsertFaqItem(_) => NatsSubject::Search(NatsSearchSubject::FaqItem),
+            Self::DeleteFaqItem(_) => NatsSubject::Search(NatsSearchSubject::FaqItem),
+            Self::UpsertPublicFaqItem(_) => NatsSubject::Search(NatsSearchSubject::PublicFaqItem),
+            Self::DeletePublicFaqItem(_) => NatsSubject::Search(NatsSearchSubject::PublicFaqItem),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]

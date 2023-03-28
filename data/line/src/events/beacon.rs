@@ -1,7 +1,7 @@
 use crate::events::Source;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct BeaconEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: String,
@@ -11,7 +11,7 @@ pub struct BeaconEvent {
     pub beacon: Beacon,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Beacon {
     pub hwid: String,
     pub r#type: String,

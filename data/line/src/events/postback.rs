@@ -1,7 +1,7 @@
 use crate::events::Source;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PostBackEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: String,
@@ -11,13 +11,13 @@ pub struct PostBackEvent {
     pub postback: PostBack,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct PostBack {
     pub data: String,
     pub params: Option<Params>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Params {
     pub date: Option<String>,
     pub time: Option<String>,

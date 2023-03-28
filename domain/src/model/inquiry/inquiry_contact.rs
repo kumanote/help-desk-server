@@ -17,6 +17,7 @@ impl<'a> Into<database::entities::NewInquiryContact<'a>> for &'a InquiryContact 
     fn into(self) -> database::entities::NewInquiryContact<'a> {
         database::entities::NewInquiryContact {
             id: &self.id,
+            line_user_id: self.details.as_line_user_id(),
             details: (&self.details).into(),
             memo: self.memo.as_deref(),
             created_at: self.created_at,
@@ -38,6 +39,16 @@ impl From<database::entities::InquiryContact> for InquiryContact {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct InquiryContactDetails {
     pub line_profile: Option<InquiryLineProfile>,
+}
+
+impl InquiryContactDetails {
+    pub fn as_line_user_id(&self) -> Option<&str> {
+        if let Some(line_profile) = &self.line_profile {
+            line_profile.user_id.as_deref()
+        } else {
+            None
+        }
+    }
 }
 
 impl From<serde_json::Value> for InquiryContactDetails {

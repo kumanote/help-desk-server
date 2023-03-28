@@ -3,18 +3,32 @@ pub use self::line::*;
 
 use serde::{Deserialize, Serialize};
 
-const TYPE_LINE: &'static str = "line";
+const TYPE_LINE_USER: &'static str = "line_user";
+const TYPE_LINE_GROUP: &'static str = "line_group";
+const TYPE_LINE_ROOM: &'static str = "line_room";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "type", content = "value")]
 pub enum InquiryThreadDetails {
-    Line(LineThreadDetails),
+    LineUser(LineUserThreadDetails),
+    LineGroup(LineGroupThreadDetails),
+    LineRoom(LineRoomThreadDetails),
 }
 
 impl InquiryThreadDetails {
     pub fn as_type(&self) -> &'static str {
         match self {
-            Self::Line(_) => TYPE_LINE,
+            Self::LineUser(_) => TYPE_LINE_USER,
+            Self::LineGroup(_) => TYPE_LINE_GROUP,
+            Self::LineRoom(_) => TYPE_LINE_ROOM,
+        }
+    }
+
+    pub fn as_type_id(&self) -> &str {
+        match self {
+            Self::LineUser(detail) => &detail.line_user_id,
+            Self::LineGroup(detail) => &detail.line_group_id,
+            Self::LineRoom(detail) => &detail.line_room_id,
         }
     }
 }

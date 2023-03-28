@@ -1,6 +1,7 @@
 mod conn;
 mod error;
 mod pool;
+mod stream;
 mod subjects;
 
 pub use conn::*;
