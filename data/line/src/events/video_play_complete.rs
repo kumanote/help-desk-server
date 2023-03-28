@@ -1,7 +1,7 @@
 use crate::events::Source;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct VideoPlayCompleteEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: String,
@@ -12,7 +12,7 @@ pub struct VideoPlayCompleteEvent {
     pub video_play_complete: VideoPlayComplete,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct VideoPlayComplete {
     #[serde(rename = "trackingId")]
     pub tracking_id: String,

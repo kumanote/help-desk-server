@@ -18,6 +18,7 @@ impl<'a> Into<database::entities::NewInquiryChannel<'a>> for &'a InquiryChannel 
         database::entities::NewInquiryChannel {
             id: &self.id,
             inquiry_channel_type: self.details.as_type(),
+            inquiry_channel_type_id: self.details.as_type_id(),
             details: (&self.details).into(),
             is_active: self.is_active,
             activated_at: self.activated_at,

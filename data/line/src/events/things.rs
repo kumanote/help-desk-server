@@ -1,7 +1,7 @@
 use crate::events::Source;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ThingsEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: String,
@@ -11,13 +11,13 @@ pub struct ThingsEvent {
     pub things: Things,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Things {
     #[serde(flatten)]
     pub r#type: ThingsType,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(tag = "type")]
 pub enum ThingsType {
     #[serde(rename = "link")]
@@ -38,7 +38,7 @@ pub enum ThingsType {
     },
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ThingsResult {
     #[serde(rename = "scenarioId")]
     pub scenario_id: String,
@@ -55,7 +55,7 @@ pub struct ThingsResult {
     pub action_results: Vec<ActionResult>,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct ActionResult {
     #[serde(rename = "type")]
     pub r#type: String,

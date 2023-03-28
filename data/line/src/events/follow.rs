@@ -1,7 +1,7 @@
 use crate::events::Source;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FollowEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: Option<String>,

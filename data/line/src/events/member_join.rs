@@ -1,7 +1,7 @@
 use crate::events::{Member, Source};
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct MemberJoinEvent {
     #[serde(rename = "replyToken")]
     pub reply_token: String,
@@ -11,7 +11,7 @@ pub struct MemberJoinEvent {
     pub joined: Joined,
 }
 
-#[derive(Deserialize, Serialize, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Joined {
     pub members: Vec<Member>,
 }

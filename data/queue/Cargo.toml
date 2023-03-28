@@ -11,6 +11,10 @@ repository = { workspace = true }
 rust-version = { workspace = true }
 
 [dependencies]
+# workspace members
+line = { workspace = true }
+
+# external libraries
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }

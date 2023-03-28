@@ -1,5 +1,5 @@
-mod emails;
+mod inquiry_incoming_event;
 mod search;
 
-pub use emails::*;
+pub use inquiry_incoming_event::*;
 pub use search::*;

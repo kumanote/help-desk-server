@@ -103,6 +103,7 @@ table! {
     inquiry_channels (id) {
         id -> Varchar,
         inquiry_channel_type -> Varchar,
+        inquiry_channel_type_id -> Varchar,
         details -> Json,
         is_active -> Bool,
         activated_at -> Datetime,
@@ -121,6 +122,7 @@ table! {
 table! {
     inquiry_contacts (id) {
         id -> Varchar,
+        line_user_id -> Nullable<Varchar>,
         details -> Json,
         memo -> Nullable<Varchar>,
         created_at -> Datetime,
@@ -154,6 +156,7 @@ table! {
         inquiry_channel_id -> Varchar,
         subject -> Varchar,
         inquiry_thread_type -> Varchar,
+        inquiry_thread_type_id -> Varchar,
         details -> Json,
         status -> Varchar,
         assigned_agent_id -> Nullable<Varchar>,

@@ -118,9 +118,24 @@ See [Diesel](https://diesel.rs/) for more information.
 ```bash
 % nats str ls
 No Streams defined
-# if no stream exists, add new stream by the following command.
+# If no stream exists, add new stream by the following command.
+# Please note that the following parameters is for local development environment.
+# Therefore you should need to adjust some parameter values when you prepare the production environment.
 % nats str add SEARCH \
-  --subjects "search" \
+  --subjects "SEARCH.*" \
+  --ack \
+  --max-msgs=-1 \
+  --max-bytes=-1 \
+  --max-age=1y \
+  --storage=file \
+  --retention=limits \
+  --max-msg-size=-1 \
+  --max-msgs-per-subject=-1 \
+  --discard=old \
+  --dupe-window="2m0s" \
+  --replicas=1
+% nats str add INQUIRY_INCOMING_EVENTS \
+  --subjects "INQUIRY_INCOMING_EVENTS.*" \
   --ack \
   --max-msgs=-1 \
   --max-bytes=-1 \
@@ -136,8 +151,21 @@ No Streams defined
 % nats con ls SEARCH
 No Consumers defined
 # if no consumer exists, add new consumer by the following command.
-nats con add SEARCH search \
-  --filter=search \
+# Please note that the following parameters is for local development environment.
+# Therefore you should need to adjust some parameter values when you prepare the production environment.
+% nats con add SEARCH ALL_SEARCH \
+  --filter='' \
+  --ack=explicit \
+  --max-pending=1000 \
+  --wait=-1s \
+  --pull \
+  --replay=instant \
+  --deliver=all \
+  --sample=-1 \
+  --max-deliver=1
+  
+% nats con add INQUIRY_INCOMING_EVENTS ALL_INQUIRY_INCOMING_EVENTS \
+  --filter='' \
   --ack=explicit \
   --max-pending=1000 \
   --wait=-1s \
