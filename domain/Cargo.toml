@@ -16,6 +16,7 @@ cache = { workspace = true }
 database = { workspace = true }
 queue = { workspace = true }
 search = { workspace = true }
+line = { workspace = true }
 
 # external libraries
 anyhow = { workspace = true }

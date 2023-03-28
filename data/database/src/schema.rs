@@ -100,6 +100,69 @@ table! {
 }
 
 table! {
+    inquiry_channels (id) {
+        id -> Varchar,
+        inquiry_channel_type -> Varchar,
+        details -> Json,
+        is_active -> Bool,
+        activated_at -> Datetime,
+        deactivated_at -> Nullable<Datetime>,
+    }
+}
+
+table! {
+    inquiry_contact_channels (inquiry_contact_id, inquiry_channel_id) {
+        inquiry_contact_id -> Varchar,
+        inquiry_channel_id -> Varchar,
+        display_order -> Unsigned<Integer>,
+    }
+}
+
+table! {
+    inquiry_contacts (id) {
+        id -> Varchar,
+        details -> Json,
+        memo -> Nullable<Varchar>,
+        created_at -> Datetime,
+    }
+}
+
+table! {
+    inquiry_messages (id) {
+        id -> Varchar,
+        inquiry_thread_id -> Varchar,
+        reply_inquiry_message_id -> Nullable<Varchar>,
+        inquiry_message_type -> Varchar,
+        details -> Json,
+        speaker_type -> Varchar,
+        inquiry_contact_id -> Nullable<Varchar>,
+        agent_id -> Nullable<Varchar>,
+        created_at -> Datetime,
+    }
+}
+
+table! {
+    inquiry_settings (id) {
+        id -> Varchar,
+        data -> Json,
+    }
+}
+
+table! {
+    inquiry_threads (id) {
+        id -> Varchar,
+        inquiry_channel_id -> Varchar,
+        subject -> Varchar,
+        inquiry_thread_type -> Varchar,
+        details -> Json,
+        status -> Varchar,
+        assigned_agent_id -> Nullable<Varchar>,
+        opened_at -> Datetime,
+        closed_at -> Nullable<Datetime>,
+    }
+}
+
+table! {
     role_scopes (role_id, scope) {
         role_id -> Varchar,
         scope -> Varchar,
@@ -140,6 +203,11 @@ joinable!(group_members -> groups (group_id));
 joinable!(group_members -> roles_for_group (role_id));
 joinable!(group_roles -> groups (group_id));
 joinable!(group_roles -> roles (role_id));
+joinable!(inquiry_contact_channels -> inquiry_channels (inquiry_channel_id));
+joinable!(inquiry_contact_channels -> inquiry_contacts (inquiry_contact_id));
+joinable!(inquiry_messages -> inquiry_threads (inquiry_thread_id));
+joinable!(inquiry_threads -> agents (assigned_agent_id));
+joinable!(inquiry_threads -> inquiry_channels (inquiry_channel_id));
 joinable!(role_scopes -> roles (role_id));
 
 allow_tables_to_appear_in_same_query!(
@@ -155,6 +223,12 @@ allow_tables_to_appear_in_same_query!(
     group_members,
     group_roles,
     groups,
+    inquiry_channels,
+    inquiry_contact_channels,
+    inquiry_contacts,
+    inquiry_messages,
+    inquiry_settings,
+    inquiry_threads,
     role_scopes,
     roles,
     roles_for_group,

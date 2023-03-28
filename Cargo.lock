@@ -717,6 +717,7 @@ dependencies = [
  "dotenv",
  "futures",
  "jsonwebtoken",
+ "line",
  "logger",
  "once_cell",
  "pbkdf2",

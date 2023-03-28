@@ -11,7 +11,6 @@ pub struct GetWebhookEndpointResult {
 impl LineClient {
     pub async fn get_webhook_endpoint(&self) -> Result<GetWebhookEndpointResult> {
         let url = LineBotApiUrl::GetWebhookEndpoint.build_url();
-        println!("url: {}", url);
         let client = Client::new(&url)?;
         client.get(&self.channel_access_token).await
     }
