@@ -1,8 +1,7 @@
 use crate::{
     model::{
         InquiryChannel, InquiryChannelDetails, InquiryChannelId, InquiryContact,
-        InquiryContactDetails, InquiryContactId, LineGroupChannelDetails, LineRoomChannelDetails,
-        LineUserChannelDetails,
+        InquiryContactDetails, InquiryContactId, LineUserChannelDetails,
     },
     repository::{InquiryRepository, InquirySearchRepository, LineRepository},
     Error, Result,
@@ -78,6 +77,12 @@ impl<
                     &line_user.user_id,
                     event_timestamp,
                 )?;
+                if contact.is_none() {
+                    // case the line user has blocked the line official account.
+                    // this case, we should skip creating channel.
+                    return Ok(());
+                }
+                let contact = contact.unwrap();
                 let channel_details = InquiryChannelDetails::LineUser(LineUserChannelDetails {
                     line_user_id: line_user.user_id.clone(),
                 });
@@ -85,44 +90,19 @@ impl<
                     self.get_or_create_channel_by_details(tx, channel_details, event_timestamp)?;
                 (contact, is_contact_added, channel)
             },
-            line::events::source::SourceType::Group(line_group) => {
-                let (contact, is_contact_added) = if let Some(line_user_id) =
-                    line_group.user_id.as_deref()
-                {
-                    self.get_or_create_contact_by_line_user_id(tx, line_user_id, event_timestamp)?
-                } else {
-                    (None, false)
-                };
-                let channel_details = InquiryChannelDetails::LineGroup(LineGroupChannelDetails {
-                    line_group_id: line_group.group_id.clone(),
-                });
-                let channel =
-                    self.get_or_create_channel_by_details(tx, channel_details, event_timestamp)?;
-                (contact, is_contact_added, channel)
+            line::events::source::SourceType::Group(_) => {
+                unreachable!()
             },
-            line::events::source::SourceType::Room(line_room) => {
-                let (contact, is_contact_added) = if let Some(line_user_id) =
-                    line_room.user_id.as_deref()
-                {
-                    self.get_or_create_contact_by_line_user_id(tx, line_user_id, event_timestamp)?
-                } else {
-                    (None, false)
-                };
-                let channel_details = InquiryChannelDetails::LineRoom(LineRoomChannelDetails {
-                    line_room_id: line_room.room_id.clone(),
-                });
-                let channel =
-                    self.get_or_create_channel_by_details(tx, channel_details, event_timestamp)?;
-                (contact, is_contact_added, channel)
+            line::events::source::SourceType::Room(_) => {
+                unreachable!()
             },
         };
         if is_contact_added {
-            let contact = contact.as_ref().unwrap();
             self.inquiry_repository
-                .attach_channel_to_contact(tx, contact, &channel)?;
+                .attach_channel_to_contact(tx, &contact, &channel)?;
             // update search engine documents.
             self.inquiry_search_repository
-                .upsert_inquiry_contact(contact)?;
+                .upsert_inquiry_contact(&contact)?;
         }
         Ok(())
     }

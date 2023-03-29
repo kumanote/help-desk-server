@@ -1,8 +1,5 @@
 use crate::{
-    model::{
-        InquiryChannelDetails, LineGroupChannelDetails, LineRoomChannelDetails,
-        LineUserChannelDetails,
-    },
+    model::{InquiryChannelDetails, LineUserChannelDetails},
     repository::InquiryRepository,
     Error, Result,
 };
@@ -54,26 +51,11 @@ impl<TX, IR: InquiryRepository<Err = Error, Transaction = TX>> HandleLineUnFollo
                     channel_details.as_type_id(),
                 )?
             },
-            line::events::source::SourceType::Group(line_group) => {
-                // case: line group admin remove the line official account from the group
-                let channel_details = InquiryChannelDetails::LineGroup(LineGroupChannelDetails {
-                    line_group_id: line_group.group_id.clone(),
-                });
-                self.inquiry_repository.get_channel_by_type_and_type_id(
-                    tx,
-                    channel_details.as_type(),
-                    channel_details.as_type_id(),
-                )?
+            line::events::source::SourceType::Group(_) => {
+                unreachable!()
             },
-            line::events::source::SourceType::Room(line_room) => {
-                let channel_details = InquiryChannelDetails::LineRoom(LineRoomChannelDetails {
-                    line_room_id: line_room.room_id.clone(),
-                });
-                self.inquiry_repository.get_channel_by_type_and_type_id(
-                    tx,
-                    channel_details.as_type(),
-                    channel_details.as_type_id(),
-                )?
+            line::events::source::SourceType::Room(_) => {
+                unreachable!()
             },
         };
         if channel.is_none() {
