@@ -2,7 +2,8 @@ mod job;
 pub use job::*;
 
 use crate::model::{
-    InquiryChannel, InquiryChannelDetails, InquiryContact, InquiryThread, InquiryThreadDetails,
+    InquiryChannel, InquiryChannelDetails, InquiryContact, InquiryMessage, InquiryMessageDetails,
+    InquiryThread, InquiryThreadDetails,
 };
 
 pub trait InquiryRepository: Send + Sync + 'static {
@@ -44,4 +45,14 @@ pub trait InquiryRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         details: &InquiryThreadDetails,
     ) -> Result<Option<InquiryThread>, Self::Err>;
+    fn create_message(
+        &self,
+        tx: &mut Self::Transaction,
+        message: &InquiryMessage,
+    ) -> Result<(), Self::Err>;
+    fn get_message_by_details(
+        &self,
+        tx: &mut Self::Transaction,
+        details: &InquiryMessageDetails,
+    ) -> Result<Option<InquiryMessage>, Self::Err>;
 }

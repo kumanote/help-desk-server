@@ -24,6 +24,7 @@ impl<'a> Into<database::entities::NewInquiryMessage<'a>> for &'a InquiryMessage 
             inquiry_thread_id: &self.inquiry_thread_id,
             reply_inquiry_message_id: self.reply_inquiry_message_id.as_deref(),
             inquiry_message_type: self.details.as_type(),
+            inquiry_message_type_id: self.details.as_type_id(),
             details: (&self.details).into(),
             speaker_type: self.speaker.as_type(),
             inquiry_contact_id: self.speaker.inquiry_contact_id().map(AsRef::as_ref),
