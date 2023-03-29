@@ -51,3 +51,36 @@ impl Into<serde_json::Value> for &InquiryMessageDetails {
         serde_json::to_value(self).unwrap()
     }
 }
+
+impl Into<search::entities::InquiryMessageDetailItem> for &InquiryMessageDetails {
+    fn into(self) -> search::entities::InquiryMessageDetailItem {
+        match &self {
+            InquiryMessageDetails::Line(detail) => match &detail.message.r#type {
+                MessageType::TextMessage(inner) => {
+                    search::entities::InquiryMessageDetailItem::Line(
+                        search::entities::InquiryMessageLineDetail {
+                            text: Some(inner.text.clone()),
+                        },
+                    )
+                },
+                MessageType::FileMessage(inner) => {
+                    search::entities::InquiryMessageDetailItem::Line(
+                        search::entities::InquiryMessageLineDetail {
+                            text: Some(inner.file_name.clone()),
+                        },
+                    )
+                },
+                MessageType::LocationMessage(inner) => {
+                    search::entities::InquiryMessageDetailItem::Line(
+                        search::entities::InquiryMessageLineDetail {
+                            text: Some(inner.address.clone()),
+                        },
+                    )
+                },
+                _ => search::entities::InquiryMessageDetailItem::Line(
+                    search::entities::InquiryMessageLineDetail::default(),
+                ),
+            },
+        }
+    }
+}

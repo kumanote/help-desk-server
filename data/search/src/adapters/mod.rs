@@ -2,6 +2,8 @@ mod health_check;
 pub use health_check::*;
 
 pub mod faq_item;
+pub mod inquiry_contact;
+pub mod inquiry_message;
 pub mod public_faq_item;
 
 use crate::entities::SearchResults;

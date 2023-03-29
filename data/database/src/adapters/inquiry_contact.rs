@@ -25,6 +25,22 @@ pub fn get_by_id(conn: &mut DbConnection, id: &str) -> Result<Option<InquiryCont
     }
 }
 
+pub fn get_by_line_user_id(
+    conn: &mut DbConnection,
+    line_user_id: &str,
+) -> Result<Option<InquiryContact>> {
+    let result = inquiry_contacts::table
+        .filter(inquiry_contacts::line_user_id.eq(line_user_id))
+        .first::<InquiryContact>(conn);
+    match result {
+        Ok(entity) => Ok(Some(entity)),
+        Err(err) => match err {
+            Error::NotFound => Ok(None),
+            _ => Err(err.into()),
+        },
+    }
+}
+
 pub fn get_list_by_ids(conn: &mut DbConnection, ids: &Vec<&str>) -> Result<Vec<InquiryContact>> {
     inquiry_contacts::table
         .filter(inquiry_contacts::id.eq_any(ids))

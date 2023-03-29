@@ -56,3 +56,12 @@ impl From<database::entities::InquiryMessage> for InquiryMessage {
         }
     }
 }
+
+impl Into<search::entities::InquiryMessage> for &InquiryMessage {
+    fn into(self) -> search::entities::InquiryMessage {
+        search::entities::InquiryMessage {
+            id: self.id.to_string(),
+            details: (&self.details).into(),
+        }
+    }
+}

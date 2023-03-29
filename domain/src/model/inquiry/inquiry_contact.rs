@@ -36,6 +36,25 @@ impl From<database::entities::InquiryContact> for InquiryContact {
     }
 }
 
+impl Into<search::entities::InquiryContact> for &InquiryContact {
+    fn into(self) -> search::entities::InquiryContact {
+        let mut details = vec![];
+        if let Some(line_profile) = &self.details.line_profile {
+            if let Some(display_name) = line_profile.display_name.as_deref() {
+                details.push(search::entities::InquiryContactDetailItem::Line(
+                    search::entities::InquiryContactLineDetail {
+                        display_name: display_name.to_owned(),
+                    },
+                ))
+            }
+        }
+        search::entities::InquiryContact {
+            id: self.id.to_string(),
+            details,
+        }
+    }
+}
+
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct InquiryContactDetails {
     pub line_profile: Option<InquiryLineProfile>,

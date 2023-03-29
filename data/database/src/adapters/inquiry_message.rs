@@ -41,7 +41,7 @@ pub fn get_by_id(conn: &mut DbConnection, id: &str) -> Result<Option<InquiryMess
     }
 }
 
-pub fn get_by_inquiry_message_type_and_inquiry_message_type_id(
+pub fn get_by_inquiry_message_type_and_id(
     conn: &mut DbConnection,
     inquiry_message_type: &str,
     inquiry_message_type_id: &str,

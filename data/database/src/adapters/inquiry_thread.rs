@@ -23,6 +23,24 @@ pub fn get_by_id(conn: &mut DbConnection, id: &str) -> Result<Option<InquiryThre
     }
 }
 
+pub fn get_by_inquiry_channel_type_and_id(
+    conn: &mut DbConnection,
+    inquiry_thread_type: &str,
+    inquiry_thread_type_id: &str,
+) -> Result<Option<InquiryThread>> {
+    let result = inquiry_threads::table
+        .filter(inquiry_threads::inquiry_thread_type.eq(inquiry_thread_type))
+        .filter(inquiry_threads::inquiry_thread_type_id.eq(inquiry_thread_type_id))
+        .first::<InquiryThread>(conn);
+    match result {
+        Ok(entity) => Ok(Some(entity)),
+        Err(err) => match err {
+            Error::NotFound => Ok(None),
+            _ => Err(err.into()),
+        },
+    }
+}
+
 pub fn get_list_by_ids(conn: &mut DbConnection, ids: &Vec<&str>) -> Result<Vec<InquiryThread>> {
     inquiry_threads::table
         .filter(inquiry_threads::id.eq_any(ids))
