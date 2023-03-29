@@ -14,7 +14,9 @@ pub struct InquiryMessage {
     pub reply_inquiry_message_id: Option<InquiryMessageId>,
     pub details: InquiryMessageDetails,
     pub speaker: InquiryMessageSpeaker,
+    pub is_canceled: bool,
     pub created_at: NaiveDateTime,
+    pub canceled_at: Option<NaiveDateTime>,
 }
 
 impl<'a> Into<database::entities::NewInquiryMessage<'a>> for &'a InquiryMessage {
@@ -29,7 +31,9 @@ impl<'a> Into<database::entities::NewInquiryMessage<'a>> for &'a InquiryMessage 
             speaker_type: self.speaker.as_type(),
             inquiry_contact_id: self.speaker.inquiry_contact_id().map(AsRef::as_ref),
             agent_id: self.speaker.agent_id().map(AsRef::as_ref),
+            is_canceled: self.is_canceled,
             created_at: self.created_at,
+            canceled_at: self.canceled_at,
         }
     }
 }
@@ -46,7 +50,9 @@ impl From<database::entities::InquiryMessage> for InquiryMessage {
                 value.inquiry_contact_id,
                 value.agent_id,
             ),
+            is_canceled: value.is_canceled,
             created_at: value.created_at,
+            canceled_at: value.canceled_at,
         }
     }
 }

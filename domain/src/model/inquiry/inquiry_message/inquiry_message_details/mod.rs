@@ -4,7 +4,7 @@ pub use self::line::*;
 use ::line::events::messages::MessageType;
 use serde::{Deserialize, Serialize};
 
-const TYPE_LINE: &'static str = "line";
+pub const INQUIRY_MESSAGE_TYPE_LINE: &'static str = "line";
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(tag = "type", content = "value")]
@@ -15,7 +15,7 @@ pub enum InquiryMessageDetails {
 impl InquiryMessageDetails {
     pub fn as_type(&self) -> &'static str {
         match self {
-            Self::Line(_) => TYPE_LINE,
+            Self::Line(_) => INQUIRY_MESSAGE_TYPE_LINE,
         }
     }
 

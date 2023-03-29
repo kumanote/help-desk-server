@@ -13,7 +13,9 @@ pub struct InquiryMessage {
     pub speaker_type: String,
     pub inquiry_contact_id: Option<String>,
     pub agent_id: Option<String>,
+    pub is_canceled: bool,
     pub created_at: NaiveDateTime,
+    pub canceled_at: Option<NaiveDateTime>,
 }
 
 #[derive(Insertable, Debug)]
@@ -28,5 +30,7 @@ pub struct NewInquiryMessage<'a> {
     pub speaker_type: &'a str,
     pub inquiry_contact_id: Option<&'a str>,
     pub agent_id: Option<&'a str>,
+    pub is_canceled: bool,
     pub created_at: NaiveDateTime,
+    pub canceled_at: Option<NaiveDateTime>,
 }

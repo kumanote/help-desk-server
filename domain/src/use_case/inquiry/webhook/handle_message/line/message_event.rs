@@ -234,10 +234,11 @@ impl<
         details: InquiryChannelDetails,
         activated_at: NaiveDateTime,
     ) -> Result<InquiryChannel> {
-        match self
-            .inquiry_repository
-            .get_channel_by_details(tx, &details)?
-        {
+        match self.inquiry_repository.get_channel_by_type_and_type_id(
+            tx,
+            details.as_type(),
+            details.as_type_id(),
+        )? {
             Some(channel) => Ok(channel),
             None => {
                 let channel = InquiryChannel {
@@ -261,10 +262,11 @@ impl<
         message: &line::events::messages::Message,
         opened_at: NaiveDateTime,
     ) -> Result<InquiryThread> {
-        match self
-            .inquiry_repository
-            .get_thread_by_details(tx, &details)?
-        {
+        match self.inquiry_repository.get_thread_by_type_and_type_id(
+            tx,
+            details.as_type(),
+            details.as_type_id(),
+        )? {
             Some(thread) => Ok(thread),
             None => {
                 let subject = InquiryThreadSubject::from(&message.r#type);
@@ -292,10 +294,11 @@ impl<
         details: InquiryMessageDetails,
         created_at: NaiveDateTime,
     ) -> Result<(InquiryMessage, bool)> {
-        match self
-            .inquiry_repository
-            .get_message_by_details(tx, &details)?
-        {
+        match self.inquiry_repository.get_message_by_type_and_type_id(
+            tx,
+            details.as_type(),
+            details.as_type_id(),
+        )? {
             Some(message) => Ok((message, false)),
             None => {
                 let message = InquiryMessage {
@@ -304,7 +307,9 @@ impl<
                     reply_inquiry_message_id: None,
                     speaker: InquiryMessageSpeaker::Contact(contact.id.clone()),
                     details,
+                    is_canceled: false,
                     created_at,
+                    canceled_at: None,
                 };
                 self.inquiry_repository.create_message(tx, &message)?;
                 Ok((message, true))

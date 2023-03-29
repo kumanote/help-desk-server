@@ -140,7 +140,9 @@ table! {
         speaker_type -> Varchar,
         inquiry_contact_id -> Nullable<Varchar>,
         agent_id -> Nullable<Varchar>,
+        is_canceled -> Bool,
         created_at -> Datetime,
+        canceled_at -> Nullable<Datetime>,
     }
 }
 

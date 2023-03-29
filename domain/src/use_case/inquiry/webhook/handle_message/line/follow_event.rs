@@ -172,10 +172,11 @@ impl<
         details: InquiryChannelDetails,
         activated_at: NaiveDateTime,
     ) -> Result<InquiryChannel> {
-        match self
-            .inquiry_repository
-            .get_channel_by_details(tx, &details)?
-        {
+        match self.inquiry_repository.get_channel_by_type_and_type_id(
+            tx,
+            details.as_type(),
+            details.as_type_id(),
+        )? {
             Some(channel) => Ok(channel),
             None => {
                 let channel = InquiryChannel {

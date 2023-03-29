@@ -1,10 +1,8 @@
 mod job;
 pub use job::*;
 
-use crate::model::{
-    InquiryChannel, InquiryChannelDetails, InquiryContact, InquiryMessage, InquiryMessageDetails,
-    InquiryThread, InquiryThreadDetails,
-};
+use crate::model::{InquiryChannel, InquiryContact, InquiryMessage, InquiryThread};
+use chrono::NaiveDateTime;
 
 pub trait InquiryRepository: Send + Sync + 'static {
     type Err;
@@ -24,10 +22,11 @@ pub trait InquiryRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         channel: &InquiryChannel,
     ) -> Result<(), Self::Err>;
-    fn get_channel_by_details(
+    fn get_channel_by_type_and_type_id(
         &self,
         tx: &mut Self::Transaction,
-        details: &InquiryChannelDetails,
+        inquiry_channel_type: &str,
+        inquiry_channel_type_id: &str,
     ) -> Result<Option<InquiryChannel>, Self::Err>;
     fn attach_channel_to_contact(
         &self,
@@ -40,19 +39,27 @@ pub trait InquiryRepository: Send + Sync + 'static {
         tx: &mut Self::Transaction,
         thread: &InquiryThread,
     ) -> Result<(), Self::Err>;
-    fn get_thread_by_details(
+    fn get_thread_by_type_and_type_id(
         &self,
         tx: &mut Self::Transaction,
-        details: &InquiryThreadDetails,
+        inquiry_thread_type: &str,
+        inquiry_thread_type_id: &str,
     ) -> Result<Option<InquiryThread>, Self::Err>;
     fn create_message(
         &self,
         tx: &mut Self::Transaction,
         message: &InquiryMessage,
     ) -> Result<(), Self::Err>;
-    fn get_message_by_details(
+    fn get_message_by_type_and_type_id(
         &self,
         tx: &mut Self::Transaction,
-        details: &InquiryMessageDetails,
+        inquiry_message_type: &str,
+        inquiry_message_type_id: &str,
     ) -> Result<Option<InquiryMessage>, Self::Err>;
+    fn update_message_on_canceled(
+        &self,
+        tx: &mut Self::Transaction,
+        message: &mut InquiryMessage,
+        canceled_at: NaiveDateTime,
+    ) -> Result<(), Self::Err>;
 }
