@@ -177,7 +177,17 @@ impl<
             details.as_type(),
             details.as_type_id(),
         )? {
-            Some(channel) => Ok(channel),
+            Some(mut channel) => {
+                if !channel.is_active {
+                    // if the channel has been deactivated, reactivate it.
+                    self.inquiry_repository.update_channel_on_reactivated(
+                        tx,
+                        &mut channel,
+                        activated_at,
+                    )?;
+                }
+                Ok(channel)
+            },
             None => {
                 let channel = InquiryChannel {
                     id: InquiryChannelId::generate(),

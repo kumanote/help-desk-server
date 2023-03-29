@@ -28,6 +28,18 @@ pub trait InquiryRepository: Send + Sync + 'static {
         inquiry_channel_type: &str,
         inquiry_channel_type_id: &str,
     ) -> Result<Option<InquiryChannel>, Self::Err>;
+    fn update_channel_on_deactivated(
+        &self,
+        tx: &mut Self::Transaction,
+        channel: &mut InquiryChannel,
+        deactivated_at: NaiveDateTime,
+    ) -> Result<(), Self::Err>;
+    fn update_channel_on_reactivated(
+        &self,
+        tx: &mut Self::Transaction,
+        channel: &mut InquiryChannel,
+        activated_at: NaiveDateTime,
+    ) -> Result<(), Self::Err>;
     fn attach_channel_to_contact(
         &self,
         tx: &mut Self::Transaction,
