@@ -135,11 +135,14 @@ table! {
         inquiry_thread_id -> Varchar,
         reply_inquiry_message_id -> Nullable<Varchar>,
         inquiry_message_type -> Varchar,
+        inquiry_message_type_id -> Varchar,
         details -> Json,
         speaker_type -> Varchar,
         inquiry_contact_id -> Nullable<Varchar>,
         agent_id -> Nullable<Varchar>,
+        is_canceled -> Bool,
         created_at -> Datetime,
+        canceled_at -> Nullable<Datetime>,
     }
 }
 

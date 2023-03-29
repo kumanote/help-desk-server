@@ -8,11 +8,14 @@ pub struct InquiryMessage {
     pub inquiry_thread_id: String,
     pub reply_inquiry_message_id: Option<String>,
     pub inquiry_message_type: String,
+    pub inquiry_message_type_id: String,
     pub details: serde_json::Value,
     pub speaker_type: String,
     pub inquiry_contact_id: Option<String>,
     pub agent_id: Option<String>,
+    pub is_canceled: bool,
     pub created_at: NaiveDateTime,
+    pub canceled_at: Option<NaiveDateTime>,
 }
 
 #[derive(Insertable, Debug)]
@@ -22,9 +25,12 @@ pub struct NewInquiryMessage<'a> {
     pub inquiry_thread_id: &'a str,
     pub reply_inquiry_message_id: Option<&'a str>,
     pub inquiry_message_type: &'a str,
+    pub inquiry_message_type_id: &'a str,
     pub details: serde_json::Value,
     pub speaker_type: &'a str,
     pub inquiry_contact_id: Option<&'a str>,
     pub agent_id: Option<&'a str>,
+    pub is_canceled: bool,
     pub created_at: NaiveDateTime,
+    pub canceled_at: Option<NaiveDateTime>,
 }
