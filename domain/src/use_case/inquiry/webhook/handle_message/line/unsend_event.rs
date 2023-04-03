@@ -1,30 +1,30 @@
 use crate::{model::INQUIRY_MESSAGE_TYPE_LINE, repository::InquiryRepository, Error, Result};
 use chrono::NaiveDateTime;
 
-pub type HandleLineUnsentEventUseCaseInput = line::events::UnsendEvent;
+pub type HandleLineUnsendEventUseCaseInput = line::events::UnsendEvent;
 
-pub trait HandleLineUnsentEventUseCase: Send + Sync + 'static {
+pub trait HandleLineUnsendEventUseCase: Send + Sync + 'static {
     type Transaction;
     type InquiryRepository: InquiryRepository<Err = Error, Transaction = Self::Transaction>;
     fn execute(
         &self,
         tx: &mut Self::Transaction,
-        params: HandleLineUnsentEventUseCaseInput,
+        params: HandleLineUnsendEventUseCaseInput,
     ) -> Result<()>;
 }
 
-pub struct HandleLineUnsentEventUseCaseImpl<IR: InquiryRepository<Err = Error>> {
+pub struct HandleLineUnsendEventUseCaseImpl<IR: InquiryRepository<Err = Error>> {
     inquiry_repository: IR,
 }
 
-impl<IR: InquiryRepository<Err = Error>> HandleLineUnsentEventUseCaseImpl<IR> {
+impl<IR: InquiryRepository<Err = Error>> HandleLineUnsendEventUseCaseImpl<IR> {
     pub fn new(inquiry_repository: IR) -> Self {
         Self { inquiry_repository }
     }
 }
 
-impl<TX, IR: InquiryRepository<Err = Error, Transaction = TX>> HandleLineUnsentEventUseCase
-    for HandleLineUnsentEventUseCaseImpl<IR>
+impl<TX, IR: InquiryRepository<Err = Error, Transaction = TX>> HandleLineUnsendEventUseCase
+    for HandleLineUnsendEventUseCaseImpl<IR>
 {
     type Transaction = TX;
     type InquiryRepository = IR;
@@ -32,7 +32,7 @@ impl<TX, IR: InquiryRepository<Err = Error, Transaction = TX>> HandleLineUnsentE
     fn execute(
         &self,
         tx: &mut Self::Transaction,
-        params: HandleLineUnsentEventUseCaseInput,
+        params: HandleLineUnsendEventUseCaseInput,
     ) -> Result<()> {
         let event_timestamp = NaiveDateTime::from_timestamp_millis(params.timestamp)
             .expect("the line event timestamp must be in valid timestamp milli seconds.");

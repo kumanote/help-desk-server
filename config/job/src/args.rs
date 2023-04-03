@@ -4,6 +4,7 @@ pub struct AppArgs {
     pub cache: Option<CacheArgs>,
     pub queue: Option<QueueArgs>,
     pub search: Option<SearchArgs>,
+    pub line: Option<LineArgs>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -28,4 +29,9 @@ pub struct QueueArgs {
 pub struct SearchArgs {
     pub meilisearch_host: Option<String>,
     pub meilisearch_api_key: Option<String>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LineArgs {
+    pub channel_access_token: Option<String>,
 }
