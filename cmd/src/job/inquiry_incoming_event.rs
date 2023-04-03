@@ -61,7 +61,9 @@ impl Into<job_config::AppArgs> for InquiryIncomingEventJobArgs {
                 meilisearch_host: self.meilisearch_host,
                 meilisearch_api_key: self.meilisearch_api_key,
             }),
-            line: None,
+            line: Some(job_config::LineArgs {
+                channel_access_token: self.line_channel_access_token,
+            }),
         }
     }
 }
