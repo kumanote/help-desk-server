@@ -15,6 +15,7 @@ rust-version = { workspace = true }
 domain = { workspace = true }
 cache = { workspace = true }
 database = { workspace = true }
+line = { workspace = true }
 queue = { workspace = true }
 search = { workspace = true }
 

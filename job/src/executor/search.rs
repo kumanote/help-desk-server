@@ -15,7 +15,7 @@ pub struct SearchJobExecutor;
 
 impl SearchJobExecutor {
     pub fn new() -> Self {
-        SearchJobExecutor
+        Self
     }
 
     pub(crate) async fn start(self) -> Result<()> {

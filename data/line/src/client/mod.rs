@@ -11,7 +11,7 @@ pub use get_webhook_endpoint::*;
 pub use send_push_message::*;
 pub use test_webhook_endpoint::*;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct LineClient {
     channel_access_token: String,
 }

@@ -4,7 +4,7 @@ use job::JobExecutor;
 use std::path::PathBuf;
 
 #[derive(Args)]
-pub struct SearchJobArgs {
+pub struct InquiryIncomingEventJobArgs {
     /// Config file path
     #[arg(short = 'c', long, default_value = "app.toml")]
     config: Option<PathBuf>,
@@ -36,9 +36,13 @@ pub struct SearchJobArgs {
     /// API key of Meilisearch
     #[arg(long)]
     meilisearch_api_key: Option<String>,
+
+    /// line official account channel access token
+    #[arg(long)]
+    line_channel_access_token: Option<String>,
 }
 
-impl Into<job_config::AppArgs> for SearchJobArgs {
+impl Into<job_config::AppArgs> for InquiryIncomingEventJobArgs {
     fn into(self) -> job_config::AppArgs {
         job_config::AppArgs {
             database: Some(job_config::DatabaseArgs {
@@ -57,18 +61,19 @@ impl Into<job_config::AppArgs> for SearchJobArgs {
                 meilisearch_host: self.meilisearch_host,
                 meilisearch_api_key: self.meilisearch_api_key,
             }),
-            line: None,
+            line: Some(job_config::LineArgs {
+                channel_access_token: self.line_channel_access_token,
+            }),
         }
     }
 }
 
-impl SearchJobArgs {
+impl InquiryIncomingEventJobArgs {
     pub async fn run(self) -> Result<()> {
         let config_file_path = self.config.clone();
         let config_args: job_config::AppArgs = self.into();
         let app_config = job_config::AppConfig::build(config_file_path, config_args)?;
-        // println!("{:?}", app_config);
-        let executor = JobExecutor::new_search();
+        let executor = JobExecutor::new_inquiry_incoming_event();
         executor.start(app_config).await.map_err(Into::into)
     }
 }

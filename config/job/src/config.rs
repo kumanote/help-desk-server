@@ -7,6 +7,7 @@ pub struct AppConfig {
     pub cache: CacheConfig,
     pub queue: QueueConfig,
     pub search: SearchConfig,
+    pub line: LineConfig,
 }
 
 impl AppConfig {
@@ -24,6 +25,7 @@ impl AppConfig {
         config.cache = CacheConfig::build(app_toml.cache, app_args.cache);
         config.queue = QueueConfig::build(app_toml.queue, app_args.queue);
         config.search = SearchConfig::build(app_toml.search, app_args.search);
+        config.line = LineConfig::build(app_toml.line, app_args.line);
         Ok(config)
     }
 }
@@ -176,6 +178,36 @@ impl Default for SearchConfig {
         Self {
             meilisearch_host: "127.0.0.1".to_owned(),
             meilisearch_api_key: "MASTER_KEY".to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct LineConfig {
+    pub channel_access_token: Option<String>,
+}
+
+impl LineConfig {
+    pub fn build(app_toml: Option<LineToml>, app_args: Option<LineArgs>) -> Self {
+        let mut result = Self::default();
+        if let Some(toml) = app_toml {
+            if let Some(channel_access_token) = toml.channel_access_token {
+                result.channel_access_token = Some(channel_access_token);
+            }
+        }
+        if let Some(args) = app_args {
+            if let Some(channel_access_token) = args.channel_access_token {
+                result.channel_access_token = Some(channel_access_token);
+            }
+        }
+        result
+    }
+}
+
+impl Default for LineConfig {
+    fn default() -> Self {
+        Self {
+            channel_access_token: None,
         }
     }
 }

@@ -79,6 +79,14 @@ impl From<database::Error> for Error {
     }
 }
 
+impl From<line::Error> for Error {
+    fn from(cause: line::Error) -> Self {
+        Self::SystemError {
+            cause: cause.into(),
+        }
+    }
+}
+
 impl From<queue::Error> for Error {
     fn from(cause: queue::Error) -> Self {
         Self::SystemError {

@@ -9,6 +9,8 @@ pub enum Error {
     CacheConnectionPoolError { cause: cache::Error },
     #[error("QueueConnectionPoolError: {cause}")]
     QueueConnectionPoolError { cause: queue::Error },
+    #[error("Invalid configuration... {cause}")]
+    ImproperConfigError { cause: String },
     #[error("SystemError: {cause}")]
     SystemError { cause: anyhow::Error },
 }

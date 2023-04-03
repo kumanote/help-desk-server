@@ -13,3 +13,6 @@ max_connection_pool_size = 2
 [search]
 meilisearch_host = "http://localhost:7700"
 meilisearch_api_key = "01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff"
+
+[line]
+channel_access_token = "<channel_access_token_issued_by_line_develoers_console>"

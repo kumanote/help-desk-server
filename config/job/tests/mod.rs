@@ -23,6 +23,11 @@ fn test_build_app_config() {
             meilisearch_api_key: "01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff"
                 .to_owned(),
         },
+        line: LineConfig {
+            channel_access_token: Some(
+                "<channel_access_token_issued_by_line_develoers_console>".to_owned(),
+            ),
+        },
     };
     assert_eq!(app_config, expected);
 }

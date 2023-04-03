@@ -8,6 +8,7 @@ pub struct AppToml {
     pub cache: Option<CacheToml>,
     pub queue: Option<QueueToml>,
     pub search: Option<SearchToml>,
+    pub line: Option<LineToml>,
 }
 
 impl AppToml {
@@ -41,4 +42,9 @@ pub struct QueueToml {
 pub struct SearchToml {
     pub meilisearch_host: Option<String>,
     pub meilisearch_api_key: Option<String>,
+}
+
+#[derive(Deserialize, Eq, PartialEq, Clone)]
+pub struct LineToml {
+    pub channel_access_token: Option<String>,
 }
