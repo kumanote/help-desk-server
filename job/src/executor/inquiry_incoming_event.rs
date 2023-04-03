@@ -2,8 +2,11 @@ use crate::{config, Error, Result};
 use anyhow::anyhow;
 use database::DbConnectionPool;
 use domain::use_case::{
-    HandleLineFollowEventUseCase, HandleLineFollowEventUseCaseImpl, HandleLineUnsendEventUseCase,
-    HandleLineUnsendEventUseCaseImpl,
+    HandleLineFollowEventUseCase, HandleLineFollowEventUseCaseImpl, HandleLineJoinEventUseCase,
+    HandleLineJoinEventUseCaseImpl, HandleLineLeaveEventUseCase, HandleLineLeaveEventUseCaseImpl,
+    HandleLineMessageEventUseCase, HandleLineMessageEventUseCaseImpl,
+    HandleLineUnFollowEventUseCase, HandleLineUnFollowEventUseCaseImpl,
+    HandleLineUnsendEventUseCase, HandleLineUnsendEventUseCaseImpl,
 };
 use infrastructure::{InquiryRepositoryImpl, InquirySearchRepositoryImpl, LineRepositoryImpl};
 use line::LineClient;
@@ -102,8 +105,8 @@ fn handle_incoming_message(
                     let inquiry_search_repository = InquirySearchRepositoryImpl::new(search_client);
                     if line_client.is_none() {
                         return Err(Error::ImproperConfigError {
-                        cause: format!("this command requires line.channel_access_token configuration value."),
-                    });
+                            cause: format!("this command requires line.channel_access_token configuration value."),
+                        });
                     }
                     let line_repository = LineRepositoryImpl::new(line_client.unwrap());
                     let use_case = HandleLineFollowEventUseCaseImpl::new(
@@ -113,11 +116,35 @@ fn handle_incoming_message(
                     );
                     use_case.execute(&mut tx, logic_input).map_err(Into::into)
                 },
-                line::events::EventType::UnFollowEvent(_) => {
-                    todo!()
+                line::events::EventType::UnFollowEvent(logic_input) => {
+                    let mut tx = db_connection_pool.get()?;
+                    let inquiry_repository = InquiryRepositoryImpl;
+                    let use_case = HandleLineUnFollowEventUseCaseImpl::new(inquiry_repository);
+                    use_case.execute(&mut tx, logic_input).map_err(Into::into)
                 },
-                line::events::EventType::JoinEvent(_) => todo!(),
-                line::events::EventType::LeaveEvent(_) => todo!(),
+                line::events::EventType::JoinEvent(logic_input) => {
+                    let mut tx = db_connection_pool.get()?;
+                    let inquiry_repository = InquiryRepositoryImpl;
+                    let inquiry_search_repository = InquirySearchRepositoryImpl::new(search_client);
+                    if line_client.is_none() {
+                        return Err(Error::ImproperConfigError {
+                            cause: format!("this command requires line.channel_access_token configuration value."),
+                        });
+                    }
+                    let line_repository = LineRepositoryImpl::new(line_client.unwrap());
+                    let use_case = HandleLineJoinEventUseCaseImpl::new(
+                        inquiry_repository,
+                        inquiry_search_repository,
+                        line_repository,
+                    );
+                    use_case.execute(&mut tx, logic_input).map_err(Into::into)
+                },
+                line::events::EventType::LeaveEvent(logic_input) => {
+                    let mut tx = db_connection_pool.get()?;
+                    let inquiry_repository = InquiryRepositoryImpl;
+                    let use_case = HandleLineLeaveEventUseCaseImpl::new(inquiry_repository);
+                    use_case.execute(&mut tx, logic_input).map_err(Into::into)
+                },
                 line::events::EventType::MemberJoinEvent(_) => unimplemented!(),
                 line::events::EventType::MemberLeaveEvent(_) => unimplemented!(),
                 line::events::EventType::PostBackEvent(_) => unimplemented!(),
@@ -125,7 +152,23 @@ fn handle_incoming_message(
                 line::events::EventType::BeaconEvent(_) => unimplemented!(),
                 line::events::EventType::AccountLinkEvent(_) => unimplemented!(),
                 line::events::EventType::ThingsEvent(_) => unimplemented!(),
-                line::events::EventType::MessageEvent(_) => todo!(),
+                line::events::EventType::MessageEvent(logic_input) => {
+                    let mut tx = db_connection_pool.get()?;
+                    let inquiry_repository = InquiryRepositoryImpl;
+                    let inquiry_search_repository = InquirySearchRepositoryImpl::new(search_client);
+                    if line_client.is_none() {
+                        return Err(Error::ImproperConfigError {
+                            cause: format!("this command requires line.channel_access_token configuration value."),
+                        });
+                    }
+                    let line_repository = LineRepositoryImpl::new(line_client.unwrap());
+                    let use_case = HandleLineMessageEventUseCaseImpl::new(
+                        inquiry_repository,
+                        inquiry_search_repository,
+                        line_repository,
+                    );
+                    use_case.execute(&mut tx, logic_input).map_err(Into::into)
+                },
                 line::events::EventType::Other => unimplemented!(),
             }
         },
