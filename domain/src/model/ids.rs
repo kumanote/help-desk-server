@@ -1,6 +1,6 @@
 macro_rules! def_id {
     ($struct_name:ident) => {
-        #[derive(Clone, Debug, Default, Eq, PartialEq, Hash)]
+        #[derive(Clone, Debug, Eq, PartialEq, Hash)]
         pub struct $struct_name(String);
 
         impl $struct_name {
@@ -12,6 +12,13 @@ macro_rules! def_id {
             #[inline(always)]
             pub fn as_str(&self) -> &str {
                 &self.0
+            }
+        }
+
+        impl Default for $struct_name {
+            fn default() -> Self {
+                let id = ulid::Ulid::default();
+                Self(id.to_string())
             }
         }
 

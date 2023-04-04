@@ -115,7 +115,7 @@ impl<
 
         // init workspace
         let workspace = Workspace {
-            id: WorkspaceId::generate(),
+            id: WorkspaceId::default(),
             name: WorkspaceName::from_str(&params.workspace_name)?,
             created_at: Utc::now().naive_utc(),
         };

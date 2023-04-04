@@ -1,12 +1,25 @@
 mod job;
 pub use job::*;
 
-use crate::model::{InquiryChannel, InquiryContact, InquiryMessage, InquiryThread};
+use crate::model::{
+    InquiryChannel, InquiryContact, InquiryMessage, InquirySettings, InquirySettingsData,
+    InquiryThread,
+};
 use chrono::NaiveDateTime;
 
 pub trait InquiryRepository: Send + Sync + 'static {
     type Err;
     type Transaction;
+    fn get_settings(
+        &self,
+        tx: &mut Self::Transaction,
+    ) -> Result<Option<InquirySettings>, Self::Err>;
+    fn upsert_settings(
+        &self,
+        tx: &mut Self::Transaction,
+        settings: &mut InquirySettings,
+        data: InquirySettingsData,
+    ) -> Result<(), Self::Err>;
     fn create_contact(
         &self,
         tx: &mut Self::Transaction,

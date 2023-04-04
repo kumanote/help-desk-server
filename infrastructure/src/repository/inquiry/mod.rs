@@ -4,7 +4,8 @@ pub use job::*;
 use chrono::NaiveDateTime;
 use database::DbConnection;
 use domain::model::{
-    InquiryChannel, InquiryContact, InquiryContactChannel, InquiryMessage, InquiryThread,
+    InquiryChannel, InquiryContact, InquiryContactChannel, InquiryMessage, InquirySettings,
+    InquirySettingsData, InquiryThread,
 };
 use domain::repository::InquiryRepository;
 
@@ -13,6 +14,25 @@ pub struct InquiryRepositoryImpl;
 impl InquiryRepository for InquiryRepositoryImpl {
     type Err = domain::Error;
     type Transaction = DbConnection;
+
+    fn get_settings(
+        &self,
+        tx: &mut Self::Transaction,
+    ) -> Result<Option<InquirySettings>, Self::Err> {
+        let entity = database::adapters::inquiry_settings::get(tx)?;
+        Ok(entity.map(Into::into))
+    }
+
+    fn upsert_settings(
+        &self,
+        tx: &mut Self::Transaction,
+        settings: &mut InquirySettings,
+        data: InquirySettingsData,
+    ) -> Result<(), Self::Err> {
+        settings.data = data;
+        database::adapters::inquiry_settings::upsert(tx, settings.into())?;
+        Ok(())
+    }
 
     fn create_contact(
         &self,
