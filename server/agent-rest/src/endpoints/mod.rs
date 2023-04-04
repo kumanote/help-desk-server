@@ -4,6 +4,7 @@ mod faq;
 mod general;
 mod health_check;
 mod index;
+mod inquiry;
 mod workspace;
 
 use crate::AppState;
@@ -66,6 +67,10 @@ pub fn router(state: AppState) -> Router {
             get(faq::item::get::handler)
                 .put(faq::item::update::handler)
                 .delete(faq::item::delete::handler),
+        )
+        .route(
+            "/inquiry/settings",
+            get(inquiry::settings::get::handler).put(inquiry::settings::create_or_update::handler),
         )
         .route(
             "/general/faq_content_locales/",

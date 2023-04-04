@@ -12,7 +12,7 @@ To set up local environment, please follow the following instructions.
 
 ## Prerequisites
 
-- mysql client (optional)
+- mysql client development libraries (For OS X, you can install by running `brew install mysql`)
 - `diesel_cli` (you can install by running `cargo install diesel_cli`)
 - nats client (optional)
 
@@ -100,7 +100,7 @@ See [Diesel](https://diesel.rs/) for more information.
   "key": "01d5e2eaaaee7a36104ff786f5621b3f21a41ddd628ca12f6fc0b157cfc109ff",
   "uid": "45a7ed19-1926-44af-910b-cb13c3b0c97c",
   "actions": [
-    "search"
+    "*"
   ],
   "indexes": [
     "*"

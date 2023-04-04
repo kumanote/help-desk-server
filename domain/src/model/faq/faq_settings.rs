@@ -10,7 +10,7 @@ pub struct FaqSettings {
 impl Default for FaqSettings {
     fn default() -> Self {
         Self {
-            id: FaqSettingsId::generate(),
+            id: FaqSettingsId::default(),
             data: FaqSettingsData::default(),
         }
     }

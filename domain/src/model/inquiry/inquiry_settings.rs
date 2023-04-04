@@ -10,13 +10,13 @@ pub struct InquirySettings {
 impl Default for InquirySettings {
     fn default() -> Self {
         Self {
-            id: InquirySettingsId::generate(),
+            id: InquirySettingsId::default(),
             data: InquirySettingsData::default(),
         }
     }
 }
 
-impl<'a> Into<database::entities::NewInquirySettings<'a>> for &'a InquirySettings {
+impl<'a> Into<database::entities::NewInquirySettings<'a>> for &'a mut InquirySettings {
     fn into(self) -> database::entities::NewInquirySettings<'a> {
         database::entities::NewInquirySettings {
             id: &self.id,
